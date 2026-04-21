@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Mail, ArrowRight } from "lucide-react";
-import izLogo from "@/assets/iz-logo.jpg";
+import izLogo from "@/assets/iz-logo.png";
 
 export function Footer() {
   return (
@@ -10,11 +10,8 @@ export function Footer() {
           <img
             src={izLogo}
             alt="IZ Patisserie & Cafe"
-            className="h-16 w-auto mb-4 rounded-sm object-contain mix-blend-multiply"
+            className="h-24 w-auto mb-4 object-contain"
           />
-          <h3 className="font-serif text-2xl text-cocoa mb-3">
-            IZ <span className="italic font-light">Patisserie & Cafe</span>
-          </h3>
           <p className="text-sm text-foreground/70 leading-relaxed max-w-xs">
             Crafting moments of pure indulgence through artisanal baking and high-end culinary artistry.
           </p>
