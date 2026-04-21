@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Heart, Sparkles } from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
@@ -22,6 +22,7 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:title", content: "IZ Patisserie & Cafe — Luxury Desserts" },
       { property: "og:description", content: "Hand-crafted cakes, brownies, macarons and gift boxes." },
+      { property: "og:image", content: heroCake },
     ],
   }),
   component: Home,
@@ -32,21 +33,24 @@ const slides = [
     image: heroCake,
     eyebrow: "Signature Collection",
     title: "Luxury Desserts,\nMade Fresh.",
-    sub: "Hand-crafted every morning with the finest ingredients.",
+    sub: "Experience the fine art of patisserie. Hand-crafted daily with premium silk-textured creams and Tahitian vanilla.",
   },
   {
     image: heroPastries,
     eyebrow: "New This Season",
     title: "A Pastel Affair\nin Every Bite.",
-    sub: "Delicate French pastries, macarons and petit fours.",
+    sub: "Delicate French pastries, macarons and petit fours, plated like little works of art.",
   },
   {
     image: heroBrownies,
     eyebrow: "Best Sellers",
     title: "Decadent Brownies,\nObsessively Fudgy.",
-    sub: "Glossy ganache, sea salt finish, pure indulgence.",
+    sub: "Glossy ganache, flaky sea salt finish, pure indulgence in every square.",
   },
 ];
+
+const sizes = [`6" Serves 8`, `8" Serves 12`, `10" Serves 20`];
+const bases = ["Tahitian Vanilla", "Rich Velvet Cocoa"];
 
 function Home() {
   const [active, setActive] = useState(0);
@@ -55,12 +59,23 @@ function Home() {
     return () => clearInterval(t);
   }, []);
 
+  // Hot picks carousel
+  const railRef = useRef<HTMLDivElement>(null);
+  const scrollBy = (dir: 1 | -1) => {
+    const el = railRef.current;
+    if (!el) return;
+    el.scrollBy({ left: dir * Math.min(el.clientWidth * 0.85, 720), behavior: "smooth" });
+  };
+
+  const [size, setSize] = useState(sizes[0]);
+  const [base, setBase] = useState(bases[0]);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* HERO SLIDER */}
-      <section className="relative h-[78vh] min-h-[560px] max-h-[820px] overflow-hidden">
+      <section className="relative h-[72vh] min-h-[520px] max-h-[760px] overflow-hidden mx-3 sm:mx-6 mt-3 sm:mt-4 rounded-3xl">
         {slides.map((s, i) => (
           <div
             key={i}
@@ -73,40 +88,40 @@ function Home() {
               className="w-full h-full object-cover"
               loading={i === 0 ? "eager" : "lazy"}
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-cocoa/60 via-cocoa/10 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cocoa/75 via-cocoa/40 to-transparent" />
           </div>
         ))}
 
-        <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-end pb-20 sm:pb-28">
-          <div className="max-w-2xl text-cocoa-foreground">
+        <div className="relative h-full px-6 sm:px-12 lg:px-16 flex items-center">
+          <div className="max-w-xl text-cocoa-foreground">
             <p
               key={`eyebrow-${active}`}
-              className="text-xs sm:text-sm tracking-[0.3em] uppercase mb-5 opacity-90 animate-[fade-up_0.6s_ease-out]"
+              className="text-[10px] sm:text-xs tracking-[0.32em] uppercase mb-5 opacity-90 animate-[fade-up_0.6s_ease-out]"
             >
               {slides[active].eyebrow}
             </p>
             <h1
               key={`title-${active}`}
-              className="font-serif text-5xl sm:text-6xl lg:text-7xl leading-[1.05] whitespace-pre-line animate-[fade-up_0.7s_ease-out]"
+              className="font-serif text-4xl sm:text-6xl lg:text-7xl leading-[1.02] whitespace-pre-line animate-[fade-up_0.7s_ease-out]"
             >
               {slides[active].title}
             </h1>
             <p
               key={`sub-${active}`}
-              className="mt-5 text-base sm:text-lg max-w-md opacity-90 animate-[fade-up_0.8s_ease-out]"
+              className="mt-5 text-sm sm:text-base max-w-md opacity-90 animate-[fade-up_0.8s_ease-out] leading-relaxed"
             >
               {slides[active].sub}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 bg-cream text-cocoa px-7 py-3.5 rounded-full text-sm font-medium hover:bg-blush transition-all hover:scale-[1.02]"
+                className="inline-flex items-center gap-2 bg-cream text-cocoa px-7 py-3 rounded-full text-sm font-medium hover:bg-blush transition-all"
               >
                 Shop Now <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 to="/custom-cake"
-                className="inline-flex items-center gap-2 border border-cream/60 text-cream px-7 py-3.5 rounded-full text-sm font-medium hover:bg-cream hover:text-cocoa transition-all"
+                className="inline-flex items-center gap-2 border border-cream/70 text-cream px-7 py-3 rounded-full text-sm font-medium hover:bg-cream hover:text-cocoa transition-all"
               >
                 Customize Cake
               </Link>
@@ -115,13 +130,13 @@ function Home() {
         </div>
 
         {/* Slide dots */}
-        <div className="absolute bottom-8 right-6 sm:right-12 flex gap-2 z-10">
+        <div className="absolute bottom-6 right-6 sm:right-10 flex gap-2 z-10">
           {slides.map((_, i) => (
             <button
               key={i}
               onClick={() => setActive(i)}
               aria-label={`Slide ${i + 1}`}
-              className={`h-1.5 rounded-full transition-all duration-500 ${
+              className={`h-1 rounded-full transition-all duration-500 ${
                 i === active ? "w-10 bg-cream" : "w-1.5 bg-cream/50"
               }`}
             />
@@ -129,45 +144,14 @@ function Home() {
         </div>
       </section>
 
-      {/* PROMISE STRIP */}
-      <section className="border-y border-border bg-cream/40">
-        <div className="container mx-auto px-4 sm:px-6 py-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-          {[
-            { icon: Sparkles, t: "Baked Fresh Daily" },
-            { icon: Heart, t: "Made with Love" },
-            { icon: Sparkles, t: "Premium Ingredients" },
-            { icon: Heart, t: "Same-Day Delivery" },
-          ].map(({ icon: Icon, t }, i) => (
-            <div key={i} className="flex items-center justify-center gap-2.5 text-cocoa">
-              <Icon className="w-4 h-4" />
-              <span className="text-xs sm:text-sm font-medium tracking-wide">{t}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CATEGORIES */}
-      <section className="container mx-auto px-4 sm:px-6 py-20 sm:py-28">
-        <div className="flex items-end justify-between mb-12 gap-6">
-          <div>
-            <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-3">Explore</p>
-            <h2 className="font-serif text-4xl sm:text-5xl text-cocoa max-w-md leading-tight">
-              A delicacy for every craving
-            </h2>
-          </div>
-          <Link to="/shop" className="hidden sm:inline-flex items-center gap-2 text-sm text-cocoa hover:gap-3 transition-all">
-            View all <ArrowRight className="w-4 h-4" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-          {categories.map((c, idx) => (
+      {/* CATEGORIES — editorial row */}
+      <section className="container mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+          {categories.map((c) => (
             <Link
               key={c.slug}
               to="/shop"
-              className={`group relative rounded-3xl overflow-hidden bg-muted shadow-soft aspect-[3/4] ${
-                idx === 0 ? "lg:row-span-2 lg:aspect-auto" : ""
-              }`}
+              className="group relative rounded-2xl overflow-hidden bg-muted aspect-[4/5] shadow-soft"
             >
               <img
                 src={c.image}
@@ -175,115 +159,205 @@ function Home() {
                 loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-cocoa/70 to-transparent" />
-              <div className="absolute bottom-0 left-0 right-0 p-5">
-                <h3 className="font-serif text-xl sm:text-2xl text-cream">{c.name}</h3>
-                <span className="text-xs text-cream/80 inline-flex items-center gap-1 mt-1 group-hover:gap-2 transition-all">
-                  Discover <ArrowRight className="w-3 h-3" />
-                </span>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-cocoa/65 via-cocoa/0 to-transparent" />
+              <span className="absolute bottom-3 left-3 bg-cream/90 backdrop-blur text-cocoa text-[11px] font-medium tracking-wide px-3 py-1 rounded-full">
+                {c.name}
+              </span>
             </Link>
           ))}
         </div>
       </section>
 
-      {/* HOT PICKS */}
-      <section className="bg-blush/30 py-20 sm:py-28">
+      {/* HOT PICKS — horizontal carousel */}
+      <section className="bg-blush/35 mt-12 sm:mt-16 py-14 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-3">Hot Picks 🔥</p>
-            <h2 className="font-serif text-4xl sm:text-5xl text-cocoa">Loved by everyone</h2>
-          </div>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
-            {products.slice(0, 4).map((p) => (
-              <ProductCard key={p.slug} product={p} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CUSTOM CAKE BANNER */}
-      <section className="container mx-auto px-4 sm:px-6 py-20 sm:py-28">
-        <div className="relative grid md:grid-cols-2 rounded-[2.5rem] overflow-hidden shadow-elegant min-h-[480px]">
-          <div className="relative">
-            <img
-              src={customBg}
-              alt="Custom cakes"
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="lazy"
-            />
-          </div>
-          <div className="bg-cream p-10 sm:p-14 lg:p-20 flex flex-col justify-center">
-            <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4">Custom orders</p>
-            <h2 className="font-serif text-4xl sm:text-5xl text-cocoa leading-tight mb-5">
-              Design your dream cake 🎂
-            </h2>
-            <p className="text-foreground/70 leading-relaxed mb-8">
-              Tell us your story and we'll bake it. From birthdays to weddings, every cake is hand-piped, hand-painted and made to delight.
-            </p>
-            <Link
-              to="/custom-cake"
-              className="inline-flex w-fit items-center gap-2 bg-cocoa text-cocoa-foreground px-8 py-4 rounded-full text-sm font-medium hover:opacity-90 transition"
-            >
-              Start custom order <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIALS */}
-      <section className="bg-cream/50 py-20 sm:py-28">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-14">
-            <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-3">Sweet words</p>
-            <h2 className="font-serif text-4xl sm:text-5xl text-cocoa">From our family of regulars</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                name: "Ayesha R.",
-                text: "The strawberry shortcake is perfection. Light, fresh, and beautiful enough to gift.",
-                role: "Dhaka",
-              },
-              {
-                name: "Tanvir H.",
-                text: "Ordered a custom cake for my wife's birthday. Stunning detail. She cried (happy tears!).",
-                role: "Gulshan",
-              },
-              {
-                name: "Nadia M.",
-                text: "Their macarons rival what I had in Paris. Genuinely. The packaging is dreamy too.",
-                role: "Banani",
-              },
-            ].map((t, i) => (
-              <div
-                key={i}
-                className="bg-card rounded-3xl p-8 shadow-soft hover:shadow-blush transition-all duration-500 hover:-translate-y-1"
+          <div className="flex items-end justify-between mb-8 gap-6">
+            <div>
+              <h2 className="font-serif text-3xl sm:text-4xl text-cocoa leading-tight">
+                The Week's Hot Picks
+              </h2>
+              <p className="text-sm text-foreground/65 mt-2">
+                Hand-selected favourites for the sweet connoisseur.
+              </p>
+            </div>
+            <div className="hidden sm:flex gap-2">
+              <button
+                onClick={() => scrollBy(-1)}
+                aria-label="Previous"
+                className="w-10 h-10 rounded-full border border-cocoa/20 bg-cream/60 text-cocoa hover:bg-cocoa hover:text-cocoa-foreground transition flex items-center justify-center"
               >
-                <div className="flex gap-1 mb-4 text-rose-gold">
-                  {Array.from({ length: 5 }).map((_, k) => (
-                    <span key={k}>★</span>
-                  ))}
-                </div>
-                <p className="font-serif text-lg text-cocoa leading-relaxed mb-6">"{t.text}"</p>
-                <div className="text-sm">
-                  <p className="font-medium text-cocoa">{t.name}</p>
-                  <p className="text-muted-foreground">{t.role}</p>
-                </div>
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => scrollBy(1)}
+                aria-label="Next"
+                className="w-10 h-10 rounded-full border border-cocoa/20 bg-cream/60 text-cocoa hover:bg-cocoa hover:text-cocoa-foreground transition flex items-center justify-center"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={railRef}
+            className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-none -mx-4 sm:mx-0 px-4 sm:px-0 pb-2"
+            style={{ scrollbarWidth: "none" }}
+          >
+            {products.map((p) => (
+              <div
+                key={p.slug}
+                className="snap-start shrink-0 w-[68%] sm:w-[42%] lg:w-[23.5%]"
+              >
+                <ProductCard product={p} />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* INSTAGRAM */}
-      <section className="container mx-auto px-4 sm:px-6 py-20 sm:py-28">
-        <div className="text-center mb-12">
-          <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-3">@izpatisserie</p>
-          <h2 className="font-serif text-4xl sm:text-5xl text-cocoa">Follow our daily bake</h2>
+      {/* CUSTOM CAKE — inline builder card */}
+      <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24">
+        <div className="grid md:grid-cols-2 rounded-[2rem] overflow-hidden shadow-elegant min-h-[460px] bg-blush/50">
+          <div className="p-8 sm:p-12 lg:p-14 flex flex-col justify-center">
+            <h2 className="font-serif text-3xl sm:text-5xl text-cocoa leading-[1.05] mb-4">
+              Build Your<br />Perfect Slice
+            </h2>
+            <p className="text-foreground/70 leading-relaxed mb-8 max-w-md text-sm sm:text-base">
+              Tailor every detail from the sponge to the secret fillings.
+              Our bakers bring your vision to life.
+            </p>
+
+            <div className="space-y-5">
+              <div>
+                <p className="text-[11px] tracking-[0.2em] uppercase text-cocoa/70 mb-2.5">
+                  1. Select Size
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {sizes.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => setSize(s)}
+                      className={`px-4 py-2 rounded-full text-xs sm:text-sm border transition-all ${
+                        size === s
+                          ? "bg-cocoa text-cocoa-foreground border-cocoa"
+                          : "bg-cream/60 border-cocoa/15 text-cocoa hover:border-cocoa/40"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[11px] tracking-[0.2em] uppercase text-cocoa/70 mb-2.5">
+                  2. Choose Base
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {bases.map((b) => (
+                    <button
+                      key={b}
+                      onClick={() => setBase(b)}
+                      className={`px-4 py-2 rounded-full text-xs sm:text-sm border inline-flex items-center gap-2 transition-all ${
+                        base === b
+                          ? "bg-cocoa text-cocoa-foreground border-cocoa"
+                          : "bg-cream/60 border-cocoa/15 text-cocoa hover:border-cocoa/40"
+                      }`}
+                    >
+                      <span
+                        className={`w-2 h-2 rounded-full ${
+                          base === b ? "bg-cream" : "bg-cocoa/30"
+                        }`}
+                      />
+                      {b}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <Link
+              to="/custom-cake"
+              className="mt-8 inline-flex w-fit items-center gap-2 bg-cocoa text-cocoa-foreground px-7 py-3.5 rounded-full text-sm font-medium hover:opacity-90 transition"
+            >
+              Start Designing Your Cake
+            </Link>
+          </div>
+          <div className="relative min-h-[280px] md:min-h-full">
+            <img
+              src={customBg}
+              alt="Custom cake on marble stand"
+              className="absolute inset-0 w-full h-full object-cover"
+              loading="lazy"
+            />
+          </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-2 sm:gap-3">
-          {[heroCake, heroPastries, heroBrownies, customBg, heroCake, heroPastries].map((img, i) => (
+      </section>
+
+      {/* TESTIMONIALS */}
+      <section className="container mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
+        <div className="text-center mb-10">
+          <h2 className="font-serif text-3xl sm:text-4xl text-cocoa">A Sweet Impression</h2>
+          <div className="flex justify-center gap-1 mt-3 text-rose-gold text-sm">
+            {Array.from({ length: 5 }).map((_, k) => (
+              <span key={k}>★</span>
+            ))}
+          </div>
+        </div>
+        <div className="grid md:grid-cols-3 gap-5">
+          {[
+            {
+              name: "Eleanor Vance",
+              role: "Verified Order",
+              text: "The texture of the Silk Cake was unlike anything I've ever tasted. It truly felt like a luxury experience delivered to my door.",
+            },
+            {
+              name: "Julian Wright",
+              role: "Custom Order",
+              text: "We ordered a custom wedding cake and IZ Patisserie exceeded every expectation. The design was breathtaking and the taste even better.",
+            },
+            {
+              name: "Sarah Jenkins",
+              role: "Gift Recipient",
+              text: "Perfect for gifts! The packaging is so elegant and the macarons stayed perfectly crisp. My go-to for client thank yous.",
+            },
+          ].map((t, i) => (
+            <div
+              key={i}
+              className="bg-card rounded-2xl p-7 border border-border/60 hover:shadow-soft transition-all"
+            >
+              <p className="text-sm text-foreground/75 leading-relaxed mb-6 italic">
+                "{t.text}"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-blush/70 flex items-center justify-center font-serif text-cocoa text-sm">
+                  {t.name[0]}
+                </div>
+                <div className="text-xs">
+                  <p className="font-medium text-cocoa text-sm">{t.name}</p>
+                  <p className="text-muted-foreground tracking-wider uppercase text-[10px] mt-0.5">
+                    {t.role}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* INSTAGRAM */}
+      <section className="container mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
+        <div className="flex items-end justify-between mb-6">
+          <h2 className="font-serif text-2xl sm:text-3xl text-cocoa">Follow the Indulgence</h2>
+          <a
+            href="#"
+            className="text-xs sm:text-sm text-cocoa/70 hover:text-cocoa transition tracking-wide"
+          >
+            @izpatisserie
+          </a>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+          {[heroBrownies, heroPastries, heroPastries, heroCake].map((img, i) => (
             <a
               key={i}
               href="#"
@@ -296,7 +370,9 @@ function Home() {
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-cocoa/0 group-hover:bg-cocoa/40 transition flex items-center justify-center">
-                <span className="text-cream text-xs font-medium opacity-0 group-hover:opacity-100 transition">View</span>
+                <span className="text-cream text-xs font-medium opacity-0 group-hover:opacity-100 transition">
+                  View on Instagram
+                </span>
               </div>
             </a>
           ))}
