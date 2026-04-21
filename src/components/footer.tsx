@@ -16,12 +16,18 @@ export function Footer() {
             Crafting moments of pure indulgence through artisanal baking and high-end culinary artistry.
           </p>
           <div className="flex gap-2 mt-5">
-            {[Instagram, Facebook, Mail].map((Icon, i) => (
+            {[
+              { Icon: Instagram, href: "https://www.instagram.com/izpatisserieandcafe/", label: "Instagram" },
+              { Icon: Facebook, href: "https://www.facebook.com/IZPatisserieandCafe/", label: "Facebook" },
+              { Icon: Mail, href: "mailto:hello@izpatisserie.com", label: "Email" },
+            ].map(({ Icon, href, label }, i) => (
               <a
                 key={i}
-                href="#"
+                href={href}
+                target={href.startsWith("http") ? "_blank" : undefined}
+                rel={href.startsWith("http") ? "noopener noreferrer" : undefined}
                 className="w-9 h-9 rounded-full border border-cocoa/15 flex items-center justify-center text-cocoa hover:bg-cocoa hover:text-cocoa-foreground transition"
-                aria-label="Social link"
+                aria-label={label}
               >
                 <Icon className="w-4 h-4" />
               </a>

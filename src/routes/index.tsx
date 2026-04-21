@@ -6,9 +6,14 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
 import { products, categories } from "@/lib/products";
-import heroCake from "@/assets/hero-cake.jpg";
+import heroCake from "@/assets/iz-hero-cake.jpg";
 import heroBrownies from "@/assets/hero-brownies.jpg";
-import heroPastries from "@/assets/hero-pastries.jpg";
+import heroPastries from "@/assets/iz-macarons.jpg";
+import heroInterior from "@/assets/iz-interior.jpg";
+import izCroissant from "@/assets/iz-croissant.jpg";
+import izCremeBrulee from "@/assets/iz-cremebrulee.jpg";
+import izLatte from "@/assets/iz-latte.jpg";
+import izPecanTart from "@/assets/iz-pecantart.jpg";
 import customBg from "@/assets/custom-cake-bg.jpg";
 
 export const Route = createFileRoute("/")({
@@ -32,20 +37,20 @@ const slides = [
   {
     image: heroCake,
     eyebrow: "Signature Collection",
-    title: "Luxury Desserts,\nMade Fresh.",
-    sub: "Experience the fine art of patisserie. Hand-crafted daily with premium silk-textured creams and Tahitian vanilla.",
+    title: "Where Pâtisserie\nMeets Poetry.",
+    sub: "Hand-crafted French desserts, baked fresh each morning. A Mirpur landmark since 2023.",
+  },
+  {
+    image: heroInterior,
+    eyebrow: "Visit the Café",
+    title: "A Cosy Corner of\nVictorian Charm.",
+    sub: "Velvet seating, golden mirrors, and the scent of fresh espresso. Mirpur-12, beside Pallabi metro.",
   },
   {
     image: heroPastries,
     eyebrow: "New This Season",
-    title: "A Pastel Affair\nin Every Bite.",
-    sub: "Delicate French pastries, macarons and petit fours, plated like little works of art.",
-  },
-  {
-    image: heroBrownies,
-    eyebrow: "Best Sellers",
-    title: "Decadent Brownies,\nObsessively Fudgy.",
-    sub: "Glossy ganache, flaky sea salt finish, pure indulgence in every square.",
+    title: "Pastel Macarons\nin Every Hue.",
+    sub: "Delicate French shells, silky ganache. Plated like little works of art.",
   },
 ];
 
@@ -348,29 +353,36 @@ function Home() {
       {/* INSTAGRAM */}
       <section className="container mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
         <div className="flex items-end justify-between mb-6">
-          <h2 className="font-serif text-2xl sm:text-3xl text-cocoa">Follow the Indulgence</h2>
+          <div>
+            <p className="text-[11px] tracking-[0.28em] uppercase text-cocoa/60 mb-1">Follow Us</p>
+            <h2 className="font-serif text-2xl sm:text-3xl text-cocoa">@izpatisserieandcafe</h2>
+          </div>
           <a
-            href="#"
+            href="https://www.instagram.com/izpatisserieandcafe/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="text-xs sm:text-sm text-cocoa/70 hover:text-cocoa transition tracking-wide"
           >
-            @izpatisserie
+            View Profile →
           </a>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-          {[heroBrownies, heroPastries, heroPastries, heroCake].map((img, i) => (
+          {[izCroissant, izCremeBrulee, izPecanTart, izLatte].map((img, i) => (
             <a
               key={i}
-              href="#"
+              href="https://www.instagram.com/izpatisserieandcafe/"
+              target="_blank"
+              rel="noopener noreferrer"
               className="relative aspect-square rounded-2xl overflow-hidden group bg-muted"
             >
               <img
                 src={img}
-                alt="Instagram"
+                alt="IZ Patisserie Instagram"
                 loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
               <div className="absolute inset-0 bg-cocoa/0 group-hover:bg-cocoa/40 transition flex items-center justify-center">
-                <span className="text-cream text-xs font-medium opacity-0 group-hover:opacity-100 transition">
+                <span className="text-cream text-xs font-medium opacity-0 group-hover:opacity-100 transition tracking-wide">
                   View on Instagram
                 </span>
               </div>
