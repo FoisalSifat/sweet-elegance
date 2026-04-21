@@ -1,4 +1,5 @@
 import { Link } from "@tanstack/react-router";
+import { ShoppingBag } from "lucide-react";
 import type { Product } from "@/lib/products";
 import { cartStore } from "@/lib/cart-store";
 
@@ -21,35 +22,42 @@ export function ProductCard({ product }: { product: Product }) {
     <Link
       to="/product/$slug"
       params={{ slug: product.slug }}
-      className="group block"
+      className="group block bg-card rounded-2xl overflow-hidden shadow-soft hover:shadow-elegant transition-all duration-500"
     >
-      <div className="relative aspect-square overflow-hidden rounded-3xl bg-muted shadow-soft">
+      <div className="relative aspect-[4/5] overflow-hidden bg-muted">
         <img
           src={product.image}
           alt={product.name}
           loading="lazy"
           width={1024}
           height={1024}
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {product.tag && (
-          <span className="absolute top-4 left-4 bg-cream/95 backdrop-blur text-cocoa text-[11px] font-medium tracking-wide px-3 py-1.5 rounded-full">
+          <span className="absolute top-3 left-3 bg-cocoa text-cocoa-foreground text-[9px] font-semibold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full">
             {product.tag}
           </span>
         )}
-        <button
-          onClick={quickAdd}
-          className="absolute bottom-4 left-4 right-4 bg-cocoa text-cocoa-foreground text-sm font-medium py-3 rounded-full opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 hover:opacity-90"
-        >
-          Quick add
-        </button>
       </div>
-      <div className="mt-4 px-1 flex justify-between items-start gap-3">
-        <div>
-          <p className="text-[11px] uppercase tracking-[0.15em] text-muted-foreground">{product.category}</p>
-          <h3 className="font-serif text-lg text-cocoa mt-1">{product.name}</h3>
+      <div className="p-4 sm:p-5">
+        <h3 className="font-serif text-base sm:text-lg text-cocoa leading-tight line-clamp-1">
+          {product.name}
+        </h3>
+        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+          {product.description.split(".")[0]}.
+        </p>
+        <div className="mt-4 flex items-center justify-between">
+          <span className="font-medium text-cocoa text-sm sm:text-base">
+            ৳{product.price.toLocaleString()}
+          </span>
+          <button
+            onClick={quickAdd}
+            aria-label="Add to cart"
+            className="w-9 h-9 rounded-full bg-blush/60 hover:bg-cocoa hover:text-cocoa-foreground text-cocoa flex items-center justify-center transition-all"
+          >
+            <ShoppingBag className="w-4 h-4" />
+          </button>
         </div>
-        <span className="font-medium text-cocoa whitespace-nowrap pt-4">৳{product.price.toLocaleString()}</span>
       </div>
     </Link>
   );
