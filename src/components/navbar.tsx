@@ -42,8 +42,13 @@ export function Navbar() {
           <Menu className="w-5 h-5" />
         </button>
 
-        <Link to="/" className="flex items-center gap-2 group">
-          <span className="font-serif text-2xl sm:text-3xl tracking-tight text-cocoa">
+        <Link to="/" className="flex items-center gap-3 group">
+          <img
+            src={izLogo}
+            alt="IZ Patisserie & Cafe"
+            className="h-10 sm:h-12 w-auto rounded-sm object-contain mix-blend-multiply"
+          />
+          <span className="hidden sm:inline font-serif text-xl lg:text-2xl tracking-tight text-cocoa">
             IZ <span className="italic font-light">Patisserie</span>
           </span>
         </Link>
