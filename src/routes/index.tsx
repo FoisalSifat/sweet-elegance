@@ -86,12 +86,15 @@ function Home() {
             key={i}
             className="absolute inset-0 transition-opacity duration-1000"
             style={{ opacity: i === active ? 1 : 0 }}
+            aria-hidden={i !== active}
           >
             <img
               src={s.image}
               alt={s.title}
               className="w-full h-full object-cover"
               loading={i === 0 ? "eager" : "lazy"}
+              fetchPriority={i === 0 ? "high" : "low"}
+              decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-cocoa/75 via-cocoa/40 to-transparent" />
           </div>
