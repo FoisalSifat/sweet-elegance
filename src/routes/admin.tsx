@@ -29,13 +29,20 @@ export const Route = createFileRoute("/admin")({
   component: AdminShell,
 });
 
-const nav = [
+type NavItem = {
+  to: "/admin" | "/admin/products" | "/admin/banners" | "/admin/orders" | "/admin/settings";
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+const nav: NavItem[] = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
   { to: "/admin/products", label: "Products", icon: Package },
   { to: "/admin/banners", label: "Hero Slides", icon: Images },
   { to: "/admin/orders", label: "Orders", icon: ShoppingCart },
   { to: "/admin/settings", label: "Site Settings", icon: SettingsIcon },
-] as const;
+];
 
 function AdminShell() {
   const authed = useAdminAuth();
