@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ShoppingBag } from "lucide-react";
+import { toast } from "sonner";
 import type { Product } from "@/lib/products";
 import { cartStore } from "@/lib/cart-store";
 
@@ -16,6 +17,7 @@ export function ProductCard({ product }: { product: Product }) {
       flavor: product.flavors[0],
       qty: 1,
     });
+    toast.success(`${product.name} added to basket`);
   };
 
   return (
@@ -29,8 +31,9 @@ export function ProductCard({ product }: { product: Product }) {
           src={product.image}
           alt={product.name}
           loading="lazy"
+          decoding="async"
           width={1024}
-          height={1024}
+          height={1280}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
         {product.tag && (
@@ -53,7 +56,7 @@ export function ProductCard({ product }: { product: Product }) {
           <button
             onClick={quickAdd}
             aria-label="Add to cart"
-            className="w-9 h-9 rounded-full bg-blush/60 hover:bg-cocoa hover:text-cocoa-foreground text-cocoa flex items-center justify-center transition-all"
+            className="w-9 h-9 rounded-full bg-blush/60 hover:bg-cocoa hover:text-cocoa-foreground text-cocoa flex items-center justify-center transition-all active:scale-90"
           >
             <ShoppingBag className="w-4 h-4" />
           </button>

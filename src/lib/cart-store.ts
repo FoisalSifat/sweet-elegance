@@ -15,13 +15,39 @@ type State = {
   open: boolean;
 };
 
-let state: State = { items: [], open: false };
+const STORAGE_KEY = "iz-cart-v1";
+
+function loadInitial(): State {
+  if (typeof window === "undefined") return { items: [], open: false };
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return { items: [], open: false };
+    const parsed = JSON.parse(raw) as { items?: CartItem[] };
+    return { items: Array.isArray(parsed.items) ? parsed.items : [], open: false };
+  } catch {
+    return { items: [], open: false };
+  }
+}
+
+let state: State = loadInitial();
 const listeners = new Set<() => void>();
+
+function persist(s: State) {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ items: s.items }));
+  } catch {
+    /* ignore */
+  }
+}
 
 function setState(updater: (s: State) => State) {
   state = updater(state);
+  persist(state);
   listeners.forEach((l) => l());
 }
+
+const serverSnapshot: State = { items: [], open: false };
 
 export const cartStore = {
   subscribe(listener: () => void) {
@@ -30,6 +56,9 @@ export const cartStore = {
   },
   getSnapshot() {
     return state;
+  },
+  getServerSnapshot() {
+    return serverSnapshot;
   },
   add(item: CartItem) {
     setState((s) => {
@@ -61,13 +90,16 @@ export const cartStore = {
       items: s.items.filter((i) => `${i.slug}-${i.size}-${i.flavor}` !== key),
     }));
   },
+  clear() {
+    setState((s) => ({ ...s, items: [] }));
+  },
   setOpen(open: boolean) {
     setState((s) => ({ ...s, open }));
   },
 };
 
 export function useCart() {
-  return useSyncExternalStore(cartStore.subscribe, cartStore.getSnapshot, cartStore.getSnapshot);
+  return useSyncExternalStore(cartStore.subscribe, cartStore.getSnapshot, cartStore.getServerSnapshot);
 }
 
 export function itemKey(i: CartItem) {
