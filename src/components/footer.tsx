@@ -1,8 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Mail, ArrowRight } from "lucide-react";
 import izLogo from "@/assets/iz-logo.png";
+import { useCms } from "@/lib/cms-store";
 
 export function Footer() {
+  const { settings } = useCms();
   return (
     <footer className="bg-cream border-t border-border mt-8">
       <div className="container mx-auto px-4 sm:px-6 py-14 grid gap-10 md:grid-cols-4">
@@ -13,13 +15,13 @@ export function Footer() {
             className="h-24 w-auto mb-4 object-contain"
           />
           <p className="text-sm text-foreground/70 leading-relaxed max-w-xs">
-            Crafting moments of pure indulgence through artisanal baking and high-end culinary artistry.
+            {settings.footerTagline}
           </p>
           <div className="flex gap-2 mt-5">
             {[
-              { Icon: Instagram, href: "https://www.instagram.com/izpatisserieandcafe/", label: "Instagram" },
-              { Icon: Facebook, href: "https://www.facebook.com/IZPatisserieandCafe/", label: "Facebook" },
-              { Icon: Mail, href: "mailto:hello@izpatisserie.com", label: "Email" },
+              { Icon: Instagram, href: settings.socials.instagram, label: "Instagram" },
+              { Icon: Facebook, href: settings.socials.facebook, label: "Facebook" },
+              { Icon: Mail, href: settings.socials.email, label: "Email" },
             ].map(({ Icon, href, label }, i) => (
               <a
                 key={i}

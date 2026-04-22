@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
-import { products } from "@/lib/products";
+import { useCms } from "@/lib/cms-store";
 import { useState } from "react";
 
 export const Route = createFileRoute("/shop")({
@@ -20,6 +20,7 @@ export const Route = createFileRoute("/shop")({
 const filters = ["All", "Cakes", "Brownies", "Pastries", "Gift Boxes"];
 
 function Shop() {
+  const { products } = useCms();
   const [filter, setFilter] = useState("All");
   const filtered = filter === "All" ? products : products.filter((p) => p.category === filter);
 

@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Mail, Phone, MapPin } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import { useCms } from "@/lib/cms-store";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -16,6 +17,12 @@ export const Route = createFileRoute("/contact")({
 });
 
 function Contact() {
+  const { settings } = useCms();
+  const info = [
+    { icon: MapPin, t: "Visit us", d: settings.contact.address },
+    { icon: Phone, t: "Call us", d: `${settings.contact.phone}\n${settings.contact.hours}` },
+    { icon: Mail, t: "Email us", d: `${settings.contact.email}\n${settings.contact.secondaryEmail}` },
+  ];
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
@@ -38,11 +45,7 @@ function Contact() {
           </form>
 
           <div className="space-y-6">
-            {[
-              { icon: MapPin, t: "Visit us", d: "House 12, Road 5, Banani\nDhaka, Bangladesh" },
-              { icon: Phone, t: "Call us", d: "+880 1700 000 000\nDaily 9am — 10pm" },
-              { icon: Mail, t: "Email us", d: "hello@izpatisserie.com\norders@izpatisserie.com" },
-            ].map(({ icon: Icon, t, d }, i) => (
+            {info.map(({ icon: Icon, t, d }, i) => (
               <div key={i} className="flex gap-5 p-6 bg-cream/60 rounded-3xl">
                 <div className="w-12 h-12 rounded-full bg-cocoa text-cocoa-foreground flex items-center justify-center flex-shrink-0">
                   <Icon className="w-5 h-5" />
