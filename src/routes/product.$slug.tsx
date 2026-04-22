@@ -5,12 +5,12 @@ import { Minus, Plus, Truck, Leaf, Heart, ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
-import { getProduct, products } from "@/lib/products";
+import { cmsStore, useCms } from "@/lib/cms-store";
 import { cartStore } from "@/lib/cart-store";
 
 export const Route = createFileRoute("/product/$slug")({
   loader: ({ params }) => {
-    const product = getProduct(params.slug);
+    const product = cmsStore.getSnapshot().products.find((p) => p.slug === params.slug);
     if (!product) throw notFound();
     return { product };
   },
@@ -37,7 +37,9 @@ export const Route = createFileRoute("/product/$slug")({
 });
 
 function ProductPage() {
-  const { product } = Route.useLoaderData();
+  const { product: initial } = Route.useLoaderData();
+  const { products } = useCms();
+  const product = products.find((p) => p.slug === initial.slug) ?? initial;
   const [size, setSize] = useState(product.sizes[0]);
   const [flavor, setFlavor] = useState(product.flavors[0]);
   const [qty, setQty] = useState(1);

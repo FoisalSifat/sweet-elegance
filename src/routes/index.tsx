@@ -5,11 +5,9 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ProductCard } from "@/components/product-card";
-import { products, categories } from "@/lib/products";
+import { categories } from "@/lib/products";
+import { useCms } from "@/lib/cms-store";
 import heroCake from "@/assets/iz-hero-cake.jpg";
-import heroBrownies from "@/assets/hero-brownies.jpg";
-import heroPastries from "@/assets/iz-macarons.jpg";
-import heroInterior from "@/assets/iz-interior.jpg";
 import izCroissant from "@/assets/iz-croissant.jpg";
 import izCremeBrulee from "@/assets/iz-cremebrulee.jpg";
 import izLatte from "@/assets/iz-latte.jpg";
@@ -33,36 +31,20 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const slides = [
-  {
-    image: heroCake,
-    eyebrow: "Signature Collection",
-    title: "Where Pâtisserie\nMeets Poetry.",
-    sub: "Hand-crafted French desserts, baked fresh each morning. A Mirpur landmark since 2023.",
-  },
-  {
-    image: heroInterior,
-    eyebrow: "Visit the Café",
-    title: "A Cosy Corner of\nVictorian Charm.",
-    sub: "Velvet seating, golden mirrors, and the scent of fresh espresso. Mirpur-12, beside Pallabi metro.",
-  },
-  {
-    image: heroPastries,
-    eyebrow: "New This Season",
-    title: "Pastel Macarons\nin Every Hue.",
-    sub: "Delicate French shells, silky ganache. Plated like little works of art.",
-  },
-];
-
 const sizes = [`6" Serves 8`, `8" Serves 12`, `10" Serves 20`];
 const bases = ["Tahitian Vanilla", "Rich Velvet Cocoa"];
 
 function Home() {
+  const { products, slides } = useCms();
   const [active, setActive] = useState(0);
   useEffect(() => {
+    if (slides.length <= 1) return;
     const t = setInterval(() => setActive((p) => (p + 1) % slides.length), 5500);
     return () => clearInterval(t);
-  }, []);
+  }, [slides.length]);
+  useEffect(() => {
+    if (active >= slides.length) setActive(0);
+  }, [slides.length, active]);
 
   // Hot picks carousel
   const railRef = useRef<HTMLDivElement>(null);

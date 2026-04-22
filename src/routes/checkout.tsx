@@ -5,6 +5,7 @@ import { ArrowLeft, Lock } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { cartStore, useCart, itemKey } from "@/lib/cart-store";
+import { cmsStore } from "@/lib/cms-store";
 
 export const Route = createFileRoute("/checkout")({
   head: () => ({
@@ -31,6 +32,30 @@ function CheckoutPage() {
     setSubmitting(true);
     const data = new FormData(e.currentTarget);
     const name = String(data.get("name") || "Customer");
+    const orderItems = cart.items.map((i) => ({
+      name: i.name,
+      qty: i.qty,
+      price: i.price,
+      size: i.size,
+      flavor: i.flavor,
+    }));
+    cmsStore.addOrder({
+      id: `ord_${Date.now().toString(36)}`,
+      createdAt: Date.now(),
+      name,
+      phone: String(data.get("phone") || ""),
+      email: String(data.get("email") || ""),
+      address: String(data.get("address") || ""),
+      area: String(data.get("area") || ""),
+      city: String(data.get("city") || ""),
+      notes: String(data.get("notes") || ""),
+      payment: String(data.get("pay") || "cod"),
+      items: orderItems,
+      subtotal,
+      delivery,
+      total,
+      status: "new",
+    });
     setTimeout(() => {
       cartStore.clear();
       setSubmitting(false);

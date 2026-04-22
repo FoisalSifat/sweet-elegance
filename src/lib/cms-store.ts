@@ -1,0 +1,241 @@
+import { useSyncExternalStore } from "react";
+import { products as defaultProducts, type Product } from "@/lib/products";
+import heroCake from "@/assets/iz-hero-cake.jpg";
+import heroPastries from "@/assets/iz-macarons.jpg";
+import heroInterior from "@/assets/iz-interior.jpg";
+
+export type HeroSlide = {
+  id: string;
+  image: string;
+  eyebrow: string;
+  title: string;
+  sub: string;
+};
+
+export type Order = {
+  id: string;
+  createdAt: number;
+  name: string;
+  phone: string;
+  email: string;
+  address: string;
+  area: string;
+  city: string;
+  notes: string;
+  payment: string;
+  items: { name: string; qty: number; price: number; size: string; flavor: string }[];
+  subtotal: number;
+  delivery: number;
+  total: number;
+  status: "new" | "preparing" | "delivered" | "cancelled";
+};
+
+export type SiteSettings = {
+  announcements: string[];
+  contact: {
+    address: string;
+    phone: string;
+    hours: string;
+    email: string;
+    secondaryEmail: string;
+  };
+  footerTagline: string;
+  socials: { instagram: string; facebook: string; email: string };
+};
+
+type State = {
+  products: Product[];
+  slides: HeroSlide[];
+  settings: SiteSettings;
+  orders: Order[];
+};
+
+const STORAGE_KEY = "iz-cms-v1";
+
+const defaultSlides: HeroSlide[] = [
+  {
+    id: "s1",
+    image: heroCake,
+    eyebrow: "Signature Collection",
+    title: "Where Pâtisserie\nMeets Poetry.",
+    sub: "Hand-crafted French desserts, baked fresh each morning. A Mirpur landmark since 2023.",
+  },
+  {
+    id: "s2",
+    image: heroInterior,
+    eyebrow: "Visit the Café",
+    title: "A Cosy Corner of\nVictorian Charm.",
+    sub: "Velvet seating, golden mirrors, and the scent of fresh espresso. Mirpur-12, beside Pallabi metro.",
+  },
+  {
+    id: "s3",
+    image: heroPastries,
+    eyebrow: "New This Season",
+    title: "Pastel Macarons\nin Every Hue.",
+    sub: "Delicate French shells, silky ganache. Plated like little works of art.",
+  },
+];
+
+const defaultSettings: SiteSettings = {
+  announcements: [
+    "✨ Same day delivery available",
+    "🍰 Freshly baked every morning",
+    "🎁 Complimentary gift wrap on orders over ৳2000",
+    "💌 Personalised notes for every cake",
+  ],
+  contact: {
+    address: "House 12, Road 5, Banani\nDhaka, Bangladesh",
+    phone: "+880 1700 000 000",
+    hours: "Daily 9am — 10pm",
+    email: "hello@izpatisserie.com",
+    secondaryEmail: "orders@izpatisserie.com",
+  },
+  footerTagline:
+    "Crafting moments of pure indulgence through artisanal baking and high-end culinary artistry.",
+  socials: {
+    instagram: "https://www.instagram.com/izpatisserieandcafe/",
+    facebook: "https://www.facebook.com/IZPatisserieandCafe/",
+    email: "mailto:hello@izpatisserie.com",
+  },
+};
+
+const defaultState: State = {
+  products: defaultProducts,
+  slides: defaultSlides,
+  settings: defaultSettings,
+  orders: [],
+};
+
+function loadInitial(): State {
+  if (typeof window === "undefined") return defaultState;
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return defaultState;
+    const parsed = JSON.parse(raw) as Partial<State>;
+    return {
+      products: parsed.products?.length ? parsed.products : defaultState.products,
+      slides: parsed.slides?.length ? parsed.slides : defaultState.slides,
+      settings: { ...defaultState.settings, ...(parsed.settings || {}) },
+      orders: parsed.orders || [],
+    };
+  } catch {
+    return defaultState;
+  }
+}
+
+let state: State = loadInitial();
+const listeners = new Set<() => void>();
+
+function persist() {
+  if (typeof window === "undefined") return;
+  try {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  } catch {
+    /* ignore */
+  }
+}
+
+function setState(updater: (s: State) => State) {
+  state = updater(state);
+  persist();
+  listeners.forEach((l) => l());
+}
+
+const serverSnapshot: State = defaultState;
+
+export const cmsStore = {
+  subscribe(listener: () => void) {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  },
+  getSnapshot() {
+    return state;
+  },
+  getServerSnapshot() {
+    return serverSnapshot;
+  },
+
+  // Products
+  upsertProduct(p: Product) {
+    setState((s) => {
+      const exists = s.products.some((x) => x.slug === p.slug);
+      return {
+        ...s,
+        products: exists
+          ? s.products.map((x) => (x.slug === p.slug ? p : x))
+          : [p, ...s.products],
+      };
+    });
+  },
+  removeProduct(slug: string) {
+    setState((s) => ({ ...s, products: s.products.filter((p) => p.slug !== slug) }));
+  },
+
+  // Slides
+  upsertSlide(slide: HeroSlide) {
+    setState((s) => {
+      const exists = s.slides.some((x) => x.id === slide.id);
+      return {
+        ...s,
+        slides: exists
+          ? s.slides.map((x) => (x.id === slide.id ? slide : x))
+          : [...s.slides, slide],
+      };
+    });
+  },
+  removeSlide(id: string) {
+    setState((s) => ({ ...s, slides: s.slides.filter((x) => x.id !== id) }));
+  },
+  moveSlide(id: string, dir: -1 | 1) {
+    setState((s) => {
+      const idx = s.slides.findIndex((x) => x.id === id);
+      const next = idx + dir;
+      if (idx < 0 || next < 0 || next >= s.slides.length) return s;
+      const arr = [...s.slides];
+      const [item] = arr.splice(idx, 1);
+      arr.splice(next, 0, item);
+      return { ...s, slides: arr };
+    });
+  },
+
+  // Settings
+  updateSettings(patch: Partial<SiteSettings>) {
+    setState((s) => ({ ...s, settings: { ...s.settings, ...patch } }));
+  },
+
+  // Orders
+  addOrder(o: Order) {
+    setState((s) => ({ ...s, orders: [o, ...s.orders] }));
+  },
+  setOrderStatus(id: string, status: Order["status"]) {
+    setState((s) => ({
+      ...s,
+      orders: s.orders.map((o) => (o.id === id ? { ...o, status } : o)),
+    }));
+  },
+  removeOrder(id: string) {
+    setState((s) => ({ ...s, orders: s.orders.filter((o) => o.id !== id) }));
+  },
+
+  resetAll() {
+    setState(() => defaultState);
+  },
+};
+
+export function useCms() {
+  return useSyncExternalStore(
+    cmsStore.subscribe,
+    cmsStore.getSnapshot,
+    cmsStore.getServerSnapshot,
+  );
+}
+
+// File -> dataURL helper for image uploads in admin
+export function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result));
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
