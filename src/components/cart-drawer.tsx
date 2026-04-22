@@ -109,9 +109,13 @@ export function CartDrawer() {
               <span className="font-medium text-cocoa">৳{subtotal.toLocaleString()}</span>
             </div>
             <p className="text-xs text-muted-foreground">Delivery & taxes calculated at checkout.</p>
-            <button className="w-full bg-cocoa text-cocoa-foreground rounded-full py-3.5 font-medium hover:opacity-90 transition">
+            <Link
+              to="/checkout"
+              onClick={() => cartStore.setOpen(false)}
+              className="w-full block text-center bg-cocoa text-cocoa-foreground rounded-full py-3.5 font-medium hover:opacity-90 transition"
+            >
               Checkout · ৳{subtotal.toLocaleString()}
-            </button>
+            </Link>
             <button
               onClick={() => cartStore.setOpen(false)}
               className="w-full text-sm text-muted-foreground hover:text-cocoa"

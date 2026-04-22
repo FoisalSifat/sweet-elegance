@@ -1,5 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Minus, Plus, Truck, Leaf, Heart, ArrowLeft } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -51,6 +52,9 @@ function ProductPage() {
       flavor,
       qty,
     });
+    toast.success(`${product.name} added to basket`, {
+      description: `${size} · ${flavor} · ×${qty}`,
+    });
   };
 
   const related = products.filter((p) => p.slug !== product.slug).slice(0, 3);
@@ -68,7 +72,7 @@ function ProductPage() {
       <section className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 grid lg:grid-cols-2 gap-10 lg:gap-20">
         <div className="space-y-4">
           <div className="aspect-square rounded-3xl overflow-hidden bg-muted shadow-soft">
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+            <img src={product.image} alt={product.name} loading="eager" decoding="async" fetchPriority="high" className="w-full h-full object-cover" />
           </div>
           <div className="grid grid-cols-4 gap-3">
             {[product.image, product.image, product.image, product.image].map((img, i) => (
