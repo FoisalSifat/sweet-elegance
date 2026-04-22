@@ -177,7 +177,7 @@ function Home() {
       </section>
 
       {/* HOT PICKS — horizontal carousel */}
-      <section className="bg-blush/35 mt-12 sm:mt-16 py-14 sm:py-20">
+      <section className="bg-cream/40 mt-12 sm:mt-16 py-14 sm:py-20 border-y border-border/60">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="flex items-end justify-between mb-8 gap-6">
             <div>
@@ -225,7 +225,7 @@ function Home() {
 
       {/* CUSTOM CAKE — inline builder card */}
       <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24">
-        <div className="grid md:grid-cols-2 rounded-[2rem] overflow-hidden shadow-elegant min-h-[460px] bg-blush/50">
+        <div className="grid md:grid-cols-2 rounded-[2rem] overflow-hidden shadow-elegant min-h-[460px] bg-card border border-border">
           <div className="p-8 sm:p-12 lg:p-14 flex flex-col justify-center">
             <h2 className="font-serif text-3xl sm:text-5xl text-cocoa leading-[1.05] mb-4">
               Build Your<br />Perfect Slice
@@ -248,7 +248,7 @@ function Home() {
                       className={`px-4 py-2 rounded-full text-xs sm:text-sm border transition-all ${
                         size === s
                           ? "bg-cocoa text-cocoa-foreground border-cocoa"
-                          : "bg-cream/60 border-cocoa/15 text-cocoa hover:border-cocoa/40"
+                          : "bg-background border-cocoa/15 text-cocoa hover:border-cocoa/40"
                       }`}
                     >
                       {s}
@@ -269,7 +269,7 @@ function Home() {
                       className={`px-4 py-2 rounded-full text-xs sm:text-sm border inline-flex items-center gap-2 transition-all ${
                         base === b
                           ? "bg-cocoa text-cocoa-foreground border-cocoa"
-                          : "bg-cream/60 border-cocoa/15 text-cocoa hover:border-cocoa/40"
+                          : "bg-background border-cocoa/15 text-cocoa hover:border-cocoa/40"
                       }`}
                     >
                       <span
