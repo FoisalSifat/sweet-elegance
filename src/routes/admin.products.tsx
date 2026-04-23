@@ -157,9 +157,26 @@ function ProductDrawer({
   const update = <K extends keyof Product>(k: K, v: Product[K]) =>
     setDraft((d) => ({ ...d, [k]: v }));
 
-  const onUpload = async (file: File) => {
+  const onUploadImage = async (file: File) => {
+    if (file.size > MAX_IMAGE_BYTES) {
+      return toast.error(
+        `Image too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`,
+      );
+    }
     const url = await fileToDataUrl(file);
     update("image", url);
+    toast.success("Image attached");
+  };
+
+  const onUploadVideo = async (file: File) => {
+    if (file.size > MAX_VIDEO_BYTES) {
+      return toast.error(
+        `Video too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_VIDEO_BYTES / 1024 / 1024}MB — host on a CDN and paste the URL.`,
+      );
+    }
+    const url = await fileToDataUrl(file);
+    update("video", url);
+    toast.success("Video attached — plays on hover");
   };
 
   const slugify = (s: string) =>
@@ -178,6 +195,7 @@ function ProductDrawer({
       sizes: draft.sizes.filter(Boolean),
       flavors: draft.flavors.filter(Boolean),
       tag: draft.tag || undefined,
+      video: draft.video || undefined,
     });
   };
 
