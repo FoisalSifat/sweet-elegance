@@ -62,7 +62,7 @@ function Home() {
       <Navbar />
 
       {/* HERO SLIDER */}
-      <section className="relative h-[72vh] min-h-[520px] max-h-[760px] overflow-hidden mx-3 sm:mx-6 mt-3 sm:mt-4 rounded-3xl">
+      <section className="relative h-[64vh] min-h-[440px] max-h-[680px] overflow-hidden mx-3 sm:mx-6 mt-3 sm:mt-4 rounded-3xl">
         {slides.map((s, i) => (
           <div
             key={i}
@@ -91,40 +91,40 @@ function Home() {
                 decoding="async"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-r from-cocoa/75 via-cocoa/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-cocoa/70 via-cocoa/25 sm:via-cocoa/20 to-transparent" />
           </div>
         ))}
 
-        <div className="relative h-full px-6 sm:px-12 lg:px-16 flex items-center">
-          <div className="max-w-xl text-cocoa-foreground">
+        <div className="relative h-full px-6 sm:px-10 lg:px-14 flex items-end sm:items-center pb-10 sm:pb-0">
+          <div className="max-w-md text-cocoa-foreground">
             <p
               key={`eyebrow-${active}`}
-              className="text-[10px] sm:text-xs tracking-[0.32em] uppercase mb-5 opacity-90 animate-[fade-up_0.6s_ease-out]"
+              className="text-[10px] tracking-[0.32em] uppercase mb-3 opacity-90 animate-[fade-up_0.6s_ease-out]"
             >
               {slides[active].eyebrow}
             </p>
             <h1
               key={`title-${active}`}
-              className="font-serif text-4xl sm:text-6xl lg:text-7xl leading-[1.02] whitespace-pre-line animate-[fade-up_0.7s_ease-out]"
+              className="font-serif text-2xl sm:text-4xl lg:text-5xl leading-[1.05] whitespace-pre-line animate-[fade-up_0.7s_ease-out]"
             >
               {slides[active].title}
             </h1>
             <p
               key={`sub-${active}`}
-              className="mt-5 text-sm sm:text-base max-w-md opacity-90 animate-[fade-up_0.8s_ease-out] leading-relaxed"
+              className="mt-3 text-xs sm:text-sm max-w-sm opacity-90 animate-[fade-up_0.8s_ease-out] leading-relaxed"
             >
               {slides[active].sub}
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-5 flex flex-wrap gap-2.5">
               <Link
                 to="/shop"
-                className="inline-flex items-center gap-2 bg-cream text-cocoa px-7 py-3 rounded-full text-sm font-medium hover:bg-blush transition-all"
+                className="inline-flex items-center gap-1.5 bg-cream text-cocoa px-5 py-2 rounded-full text-xs sm:text-sm font-medium hover:bg-blush transition-all"
               >
-                Shop Now <ArrowRight className="w-4 h-4" />
+                Shop Now <ArrowRight className="w-3.5 h-3.5" />
               </Link>
               <Link
                 to="/custom-cake"
-                className="inline-flex items-center gap-2 border border-cream/70 text-cream px-7 py-3 rounded-full text-sm font-medium hover:bg-cream hover:text-cocoa transition-all"
+                className="inline-flex items-center gap-1.5 border border-cream/70 text-cream px-5 py-2 rounded-full text-xs sm:text-sm font-medium hover:bg-cream hover:text-cocoa transition-all"
               >
                 Customize Cake
               </Link>

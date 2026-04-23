@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Instagram, Facebook, Mail, ArrowRight, Sparkle } from "lucide-react";
-import izLogo from "@/assets/iz-logo.png";
+import izLogo from "@/assets/iz-logo.webp";
 import { useCms } from "@/lib/cms-store";
 
 export function Footer() {

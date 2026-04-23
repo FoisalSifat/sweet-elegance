@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cartStore, useCart } from "@/lib/cart-store";
-import izLogo from "@/assets/iz-logo.png";
+import izLogo from "@/assets/iz-logo.webp";
 
 const links = [
   { to: "/shop", label: "Shop" },
@@ -33,7 +33,7 @@ export function Navbar() {
           : "bg-background/0"
       }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between h-20 sm:h-24">
+      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
         <button
           className="md:hidden p-2 -ml-2 text-cocoa"
           onClick={() => setMobileOpen(true)}
@@ -46,7 +46,12 @@ export function Navbar() {
           <img
             src={izLogo}
             alt="IZ Patisserie & Cafe"
-            className="h-16 sm:h-20 lg:h-24 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+            width={180}
+            height={72}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            className="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
           />
         </Link>
 
