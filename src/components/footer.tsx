@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Facebook, Mail, ArrowRight } from "lucide-react";
+import { Instagram, Facebook, Mail, ArrowRight, Sparkle } from "lucide-react";
 import izLogo from "@/assets/iz-logo.png";
 import { useCms } from "@/lib/cms-store";
 
@@ -79,7 +79,17 @@ export function Footer() {
       </div>
       <div className="border-t border-border">
         <div className="container mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-muted-foreground">
-          <p>© {new Date().getFullYear()} IZ Patisserie & Cafe. Crafted with skill and visuals.</p>
+          <p className="flex items-center gap-1.5">
+            <span>© {new Date().getFullYear()} IZ Patisserie & Cafe. Crafted with skill and visuals.</span>
+            <Link
+              to="/admin"
+              aria-label="Admin panel"
+              title="Admin"
+              className="inline-flex items-center justify-center w-5 h-5 rounded-full text-muted-foreground/40 hover:text-cocoa hover:bg-cocoa/5 transition opacity-60 hover:opacity-100"
+            >
+              <Sparkle className="w-3 h-3" />
+            </Link>
+          </p>
           <div className="flex gap-5 tracking-[0.2em] uppercase">
             <a href="#" className="hover:text-cocoa">Twitter</a>
             <a href="#" className="hover:text-cocoa">Instagram</a>
