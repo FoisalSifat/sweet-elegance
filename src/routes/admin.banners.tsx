@@ -11,10 +11,15 @@ export const Route = createFileRoute("/admin/banners")({
 const emptySlide: HeroSlide = {
   id: "",
   image: "",
+  video: "",
   eyebrow: "",
   title: "",
   sub: "",
 };
+
+// Upload limits — data URLs balloon ~1.37x; cap to keep IDB persistence snappy.
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4MB
+const MAX_VIDEO_BYTES = 25 * 1024 * 1024; // 25MB
 
 function BannersAdmin() {
   const { slides } = useCms();
