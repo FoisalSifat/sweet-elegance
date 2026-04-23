@@ -54,15 +54,20 @@ function AdminShell() {
 function AdminLogin() {
   const [pw, setPw] = useState("");
   const [err, setErr] = useState(false);
-  const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminAuth.login(pw)) {
+    if (submitting) return;
+    setSubmitting(true);
+    const ok = adminAuth.login(pw.trim());
+    if (ok) {
       setErr(false);
-      navigate({ to: "/admin" });
+      // No navigation needed — AdminShell re-renders to AdminLayout once authed flips.
     } else {
       setErr(true);
+      setSubmitting(false);
     }
   };
 
@@ -80,28 +85,39 @@ function AdminLogin() {
           Restricted area. Enter the admin password.
         </p>
 
-        <input
-          type="password"
-          autoFocus
-          value={pw}
-          onChange={(e) => {
-            setPw(e.target.value);
-            if (err) setErr(false);
-          }}
-          placeholder="Password"
-          className={`mt-6 w-full px-4 py-3 rounded-xl border bg-background text-sm outline-none transition ${
-            err ? "border-destructive" : "border-border focus:border-cocoa"
-          }`}
-        />
+        <div className="relative mt-6">
+          <input
+            type={show ? "text" : "password"}
+            autoFocus
+            value={pw}
+            onChange={(e) => {
+              setPw(e.target.value);
+              if (err) setErr(false);
+            }}
+            placeholder="Password"
+            className={`w-full px-4 py-3 pr-12 rounded-xl border bg-background text-sm outline-none transition ${
+              err ? "border-destructive" : "border-border focus:border-cocoa"
+            }`}
+          />
+          <button
+            type="button"
+            onClick={() => setShow((s) => !s)}
+            aria-label={show ? "Hide password" : "Show password"}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-cocoa transition"
+          >
+            {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
+        </div>
         {err && (
           <p className="mt-2 text-xs text-destructive">Incorrect password.</p>
         )}
 
         <button
           type="submit"
-          className="mt-5 w-full bg-cocoa text-cocoa-foreground py-3 rounded-full text-sm font-medium hover:opacity-90 transition"
+          disabled={submitting || pw.length === 0}
+          className="mt-5 w-full bg-cocoa text-cocoa-foreground py-3 rounded-full text-sm font-medium hover:opacity-90 transition disabled:opacity-50"
         >
-          Sign in
+          {submitting ? "Signing in…" : "Sign in"}
         </button>
 
         <Link
