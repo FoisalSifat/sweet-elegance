@@ -70,14 +70,27 @@ function Home() {
             style={{ opacity: i === active ? 1 : 0 }}
             aria-hidden={i !== active}
           >
-            <img
-              src={s.image}
-              alt={s.title}
-              className="w-full h-full object-cover"
-              loading={i === 0 ? "eager" : "lazy"}
-              fetchPriority={i === 0 ? "high" : "low"}
-              decoding="async"
-            />
+            {s.video ? (
+              <video
+                src={s.video}
+                poster={s.image || undefined}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload={i === 0 ? "auto" : "metadata"}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <img
+                src={s.image}
+                alt={s.title}
+                className="w-full h-full object-cover"
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "low"}
+                decoding="async"
+              />
+            )}
             <div className="absolute inset-0 bg-gradient-to-r from-cocoa/75 via-cocoa/40 to-transparent" />
           </div>
         ))}
