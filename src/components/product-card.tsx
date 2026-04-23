@@ -36,6 +36,21 @@ export function ProductCard({ product }: { product: Product }) {
           height={1280}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
+        {product.video && (
+          <video
+            src={product.video}
+            muted
+            loop
+            playsInline
+            preload="none"
+            onMouseEnter={(e) => void e.currentTarget.play().catch(() => {})}
+            onMouseLeave={(e) => {
+              e.currentTarget.pause();
+              e.currentTarget.currentTime = 0;
+            }}
+            className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+          />
+        )}
         {product.tag && (
           <span className="absolute top-3 left-3 bg-cocoa text-cocoa-foreground text-[9px] font-semibold tracking-[0.18em] uppercase px-2.5 py-1 rounded-full">
             {product.tag}
