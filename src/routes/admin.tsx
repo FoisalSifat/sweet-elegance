@@ -3,7 +3,6 @@ import {
   Link,
   Outlet,
   useLocation,
-  useNavigate,
 } from "@tanstack/react-router";
 import { useState } from "react";
 import {
@@ -15,6 +14,8 @@ import {
   LogOut,
   ExternalLink,
   Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { adminAuth, useAdminAuth } from "@/lib/admin-auth";
 import { useCms } from "@/lib/cms-store";
