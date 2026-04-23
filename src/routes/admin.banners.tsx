@@ -51,9 +51,19 @@ function BannersAdmin() {
             className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col"
           >
             <div className="aspect-[16/9] bg-muted relative">
-              {s.image && (
+              {s.video ? (
+                <video
+                  src={s.video}
+                  poster={s.image || undefined}
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  className="w-full h-full object-cover"
+                />
+              ) : s.image ? (
                 <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
-              )}
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-r from-cocoa/70 to-transparent" />
               <div className="absolute inset-0 p-5 flex flex-col justify-end text-cream">
                 <p className="text-[10px] tracking-[0.3em] uppercase opacity-80">
@@ -66,6 +76,11 @@ function BannersAdmin() {
               <span className="absolute top-3 left-3 bg-background/90 text-cocoa text-xs font-medium px-2.5 py-1 rounded-full">
                 Slide {idx + 1}
               </span>
+              {s.video && (
+                <span className="absolute top-3 right-3 bg-cocoa text-cocoa-foreground text-[10px] font-semibold tracking-wider uppercase px-2 py-1 rounded-full">
+                  Video
+                </span>
+              )}
             </div>
             <div className="p-4 flex justify-between gap-2">
               <div className="flex gap-1">
