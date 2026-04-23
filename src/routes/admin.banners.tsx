@@ -160,16 +160,33 @@ function SlideDrawer({
   const update = <K extends keyof HeroSlide>(k: K, v: HeroSlide[K]) =>
     setDraft((d) => ({ ...d, [k]: v }));
 
-  const onUpload = async (file: File) => {
+  const onUploadImage = async (file: File) => {
+    if (file.size > MAX_IMAGE_BYTES) {
+      return toast.error(
+        `Image too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_IMAGE_BYTES / 1024 / 1024}MB — try compressing or paste a hosted URL.`,
+      );
+    }
     const url = await fileToDataUrl(file);
     update("image", url);
+    toast.success("Image attached");
+  };
+
+  const onUploadVideo = async (file: File) => {
+    if (file.size > MAX_VIDEO_BYTES) {
+      return toast.error(
+        `Video too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_VIDEO_BYTES / 1024 / 1024}MB — host on YouTube/Cloudinary/CDN and paste the URL instead.`,
+      );
+    }
+    const url = await fileToDataUrl(file);
+    update("video", url);
+    toast.success("Video attached — autoplays muted on the homepage");
   };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!draft.title.trim()) return toast.error("Title is required");
-    if (!draft.image) return toast.error("Image is required");
-    onSave(draft);
+    if (!draft.image && !draft.video) return toast.error("Add an image or video");
+    onSave({ ...draft, video: draft.video || undefined });
   };
 
   const inputCls =
