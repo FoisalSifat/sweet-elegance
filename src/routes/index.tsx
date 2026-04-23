@@ -91,7 +91,7 @@ function Home() {
                 decoding="async"
               />
             )}
-            <div className="absolute inset-0 bg-gradient-to-r from-cocoa/75 via-cocoa/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t sm:bg-gradient-to-r from-cocoa/70 via-cocoa/25 sm:via-cocoa/20 to-transparent" />
           </div>
         ))}
 
