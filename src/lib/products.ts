@@ -11,6 +11,8 @@ export type Product = {
   name: string;
   price: number;
   image: string;
+  /** Optional product video URL (mp4/webm). Plays muted on hover in cards. */
+  video?: string;
   category: string;
   tag?: "Best Seller" | "Limited" | "New";
   description: string;
