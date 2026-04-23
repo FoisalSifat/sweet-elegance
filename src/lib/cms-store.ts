@@ -3,10 +3,13 @@ import { products as defaultProducts, type Product } from "@/lib/products";
 import heroCake from "@/assets/iz-hero-cake.jpg";
 import heroPastries from "@/assets/iz-macarons.jpg";
 import heroInterior from "@/assets/iz-interior.jpg";
+import { idbGet, idbSet } from "@/lib/cms-storage";
 
 export type HeroSlide = {
   id: string;
   image: string;
+  /** Optional background video URL (mp4/webm). When set, plays muted+looped over the image. */
+  video?: string;
   eyebrow: string;
   title: string;
   sub: string;
@@ -106,33 +109,70 @@ const defaultState: State = {
   orders: [],
 };
 
-function loadInitial(): State {
+function mergeWithDefaults(parsed: Partial<State>): State {
+  return {
+    products: parsed.products?.length ? parsed.products : defaultState.products,
+    slides: parsed.slides?.length ? parsed.slides : defaultState.slides,
+    settings: { ...defaultState.settings, ...(parsed.settings || {}) },
+    orders: parsed.orders || [],
+  };
+}
+
+function loadInitialSync(): State {
   if (typeof window === "undefined") return defaultState;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultState;
-    const parsed = JSON.parse(raw) as Partial<State>;
-    return {
-      products: parsed.products?.length ? parsed.products : defaultState.products,
-      slides: parsed.slides?.length ? parsed.slides : defaultState.slides,
-      settings: { ...defaultState.settings, ...(parsed.settings || {}) },
-      orders: parsed.orders || [],
-    };
+    return mergeWithDefaults(JSON.parse(raw) as Partial<State>);
   } catch {
     return defaultState;
   }
 }
 
-let state: State = loadInitial();
+let state: State = loadInitialSync();
 const listeners = new Set<() => void>();
 
+// Hydrate from IndexedDB (handles large image/video data URLs that exceed
+// the localStorage quota). Once hydrated, future writes go to IDB primarily
+// with a best-effort localStorage mirror for fast initial paint.
+if (typeof window !== "undefined") {
+  void idbGet<State>(STORAGE_KEY).then((stored) => {
+    if (!stored) return;
+    state = mergeWithDefaults(stored);
+    listeners.forEach((l) => l());
+  });
+}
+
+let persistTimer: ReturnType<typeof setTimeout> | null = null;
 function persist() {
   if (typeof window === "undefined") return;
-  try {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-  } catch {
-    /* ignore */
-  }
+  // Debounce to avoid hammering IDB on rapid edits.
+  if (persistTimer) clearTimeout(persistTimer);
+  persistTimer = setTimeout(() => {
+    void idbSet(STORAGE_KEY, state);
+    // Mirror a lightweight copy to localStorage for synchronous initial paint.
+    // Strip out heavy data URLs (>200KB) so we never blow the quota.
+    try {
+      const slim: State = {
+        ...state,
+        products: state.products.map((p) =>
+          isHeavy(p.image) ? { ...p, image: "" } : p,
+        ),
+        slides: state.slides.map((s) => ({
+          ...s,
+          image: isHeavy(s.image) ? "" : s.image,
+          video: isHeavy(s.video) ? undefined : s.video,
+        })),
+      };
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
+    } catch {
+      /* localStorage quota — IDB still has the full copy */
+    }
+  }, 120);
+}
+
+function isHeavy(url?: string) {
+  return !!url && url.startsWith("data:") && url.length > 200_000;
 }
 
 function setState(updater: (s: State) => State) {

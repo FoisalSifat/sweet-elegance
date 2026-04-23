@@ -14,12 +14,16 @@ const emptyProduct: Product = {
   name: "",
   price: 0,
   image: "",
+  video: "",
   category: "Cakes",
   description: "",
   ingredients: "",
   sizes: [],
   flavors: [],
 };
+
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 25 * 1024 * 1024;
 
 const categoryOptions = ["Cakes", "Brownies", "Pastries", "Gift Boxes"];
 const tagOptions = ["", "Best Seller", "Limited", "New"] as const;
@@ -153,9 +157,26 @@ function ProductDrawer({
   const update = <K extends keyof Product>(k: K, v: Product[K]) =>
     setDraft((d) => ({ ...d, [k]: v }));
 
-  const onUpload = async (file: File) => {
+  const onUploadImage = async (file: File) => {
+    if (file.size > MAX_IMAGE_BYTES) {
+      return toast.error(
+        `Image too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`,
+      );
+    }
     const url = await fileToDataUrl(file);
     update("image", url);
+    toast.success("Image attached");
+  };
+
+  const onUploadVideo = async (file: File) => {
+    if (file.size > MAX_VIDEO_BYTES) {
+      return toast.error(
+        `Video too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_VIDEO_BYTES / 1024 / 1024}MB — host on a CDN and paste the URL.`,
+      );
+    }
+    const url = await fileToDataUrl(file);
+    update("video", url);
+    toast.success("Video attached — plays on hover");
   };
 
   const slugify = (s: string) =>
@@ -174,6 +195,7 @@ function ProductDrawer({
       sizes: draft.sizes.filter(Boolean),
       flavors: draft.flavors.filter(Boolean),
       tag: draft.tag || undefined,
+      video: draft.video || undefined,
     });
   };
 
@@ -205,7 +227,7 @@ function ProductDrawer({
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0])}
+                  onChange={(e) => e.target.files?.[0] && onUploadImage(e.target.files[0])}
                   className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-cocoa file:text-cocoa-foreground file:px-3 file:py-2 file:text-xs file:cursor-pointer"
                 />
                 <input
@@ -215,6 +237,44 @@ function ProductDrawer({
                   onChange={(e) => update("image", e.target.value)}
                   className={inputCls}
                 />
+              </div>
+            </div>
+          </Field>
+
+          <Field label="Video (optional — plays on hover in product cards)">
+            <div className="flex items-center gap-4">
+              <div className="w-24 h-24 rounded-xl bg-muted overflow-hidden flex-shrink-0 flex items-center justify-center">
+                {draft.video ? (
+                  <video src={draft.video} muted loop playsInline autoPlay className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-[10px] text-muted-foreground text-center px-1">No video</span>
+                )}
+              </div>
+              <div className="space-y-2 flex-1">
+                <input
+                  type="file"
+                  accept="video/mp4,video/webm,video/*"
+                  onChange={(e) => e.target.files?.[0] && onUploadVideo(e.target.files[0])}
+                  className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-cocoa file:text-cocoa-foreground file:px-3 file:py-2 file:text-xs file:cursor-pointer"
+                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="…or paste video URL (.mp4 / .webm)"
+                    value={draft.video?.startsWith("data:") ? "" : draft.video ?? ""}
+                    onChange={(e) => update("video", e.target.value)}
+                    className={inputCls}
+                  />
+                  {draft.video && (
+                    <button
+                      type="button"
+                      onClick={() => update("video", "")}
+                      className="px-3 rounded-lg border border-border text-xs hover:border-destructive hover:text-destructive whitespace-nowrap"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           </Field>

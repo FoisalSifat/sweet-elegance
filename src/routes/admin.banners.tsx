@@ -11,10 +11,15 @@ export const Route = createFileRoute("/admin/banners")({
 const emptySlide: HeroSlide = {
   id: "",
   image: "",
+  video: "",
   eyebrow: "",
   title: "",
   sub: "",
 };
+
+// Upload limits — data URLs balloon ~1.37x; cap to keep IDB persistence snappy.
+const MAX_IMAGE_BYTES = 4 * 1024 * 1024; // 4MB
+const MAX_VIDEO_BYTES = 25 * 1024 * 1024; // 25MB
 
 function BannersAdmin() {
   const { slides } = useCms();
@@ -46,9 +51,19 @@ function BannersAdmin() {
             className="bg-card border border-border rounded-2xl overflow-hidden flex flex-col"
           >
             <div className="aspect-[16/9] bg-muted relative">
-              {s.image && (
+              {s.video ? (
+                <video
+                  src={s.video}
+                  poster={s.image || undefined}
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  className="w-full h-full object-cover"
+                />
+              ) : s.image ? (
                 <img src={s.image} alt={s.title} className="w-full h-full object-cover" />
-              )}
+              ) : null}
               <div className="absolute inset-0 bg-gradient-to-r from-cocoa/70 to-transparent" />
               <div className="absolute inset-0 p-5 flex flex-col justify-end text-cream">
                 <p className="text-[10px] tracking-[0.3em] uppercase opacity-80">
@@ -61,6 +76,11 @@ function BannersAdmin() {
               <span className="absolute top-3 left-3 bg-background/90 text-cocoa text-xs font-medium px-2.5 py-1 rounded-full">
                 Slide {idx + 1}
               </span>
+              {s.video && (
+                <span className="absolute top-3 right-3 bg-cocoa text-cocoa-foreground text-[10px] font-semibold tracking-wider uppercase px-2 py-1 rounded-full">
+                  Video
+                </span>
+              )}
             </div>
             <div className="p-4 flex justify-between gap-2">
               <div className="flex gap-1">
@@ -140,16 +160,33 @@ function SlideDrawer({
   const update = <K extends keyof HeroSlide>(k: K, v: HeroSlide[K]) =>
     setDraft((d) => ({ ...d, [k]: v }));
 
-  const onUpload = async (file: File) => {
+  const onUploadImage = async (file: File) => {
+    if (file.size > MAX_IMAGE_BYTES) {
+      return toast.error(
+        `Image too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_IMAGE_BYTES / 1024 / 1024}MB — try compressing or paste a hosted URL.`,
+      );
+    }
     const url = await fileToDataUrl(file);
     update("image", url);
+    toast.success("Image attached");
+  };
+
+  const onUploadVideo = async (file: File) => {
+    if (file.size > MAX_VIDEO_BYTES) {
+      return toast.error(
+        `Video too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_VIDEO_BYTES / 1024 / 1024}MB — host on YouTube/Cloudinary/CDN and paste the URL instead.`,
+      );
+    }
+    const url = await fileToDataUrl(file);
+    update("video", url);
+    toast.success("Video attached — autoplays muted on the homepage");
   };
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!draft.title.trim()) return toast.error("Title is required");
-    if (!draft.image) return toast.error("Image is required");
-    onSave(draft);
+    if (!draft.image && !draft.video) return toast.error("Add an image or video");
+    onSave({ ...draft, video: draft.video || undefined });
   };
 
   const inputCls =
@@ -171,7 +208,9 @@ function SlideDrawer({
 
         <div className="p-6 space-y-5">
           <label className="block">
-            <span className="text-xs font-medium text-cocoa block mb-1.5">Background image</span>
+            <span className="text-xs font-medium text-cocoa block mb-1.5">
+              Background image <span className="text-muted-foreground font-normal">(used as poster if a video is set)</span>
+            </span>
             <div className="flex items-center gap-4">
               <div className="w-28 h-20 rounded-xl bg-muted overflow-hidden flex-shrink-0">
                 {draft.image && (
@@ -182,7 +221,7 @@ function SlideDrawer({
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0])}
+                  onChange={(e) => e.target.files?.[0] && onUploadImage(e.target.files[0])}
                   className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-cocoa file:text-cocoa-foreground file:px-3 file:py-2 file:text-xs file:cursor-pointer"
                 />
                 <input
@@ -192,6 +231,50 @@ function SlideDrawer({
                   onChange={(e) => update("image", e.target.value)}
                   className={inputCls}
                 />
+              </div>
+            </div>
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-medium text-cocoa block mb-1.5">
+              Background video <span className="text-muted-foreground font-normal">(optional — overrides the image, autoplays muted)</span>
+            </span>
+            <div className="flex items-center gap-4">
+              <div className="w-28 h-20 rounded-xl bg-muted overflow-hidden flex-shrink-0 flex items-center justify-center">
+                {draft.video ? (
+                  <video src={draft.video} muted loop playsInline autoPlay className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-[10px] text-muted-foreground">No video</span>
+                )}
+              </div>
+              <div className="space-y-2 flex-1">
+                <input
+                  type="file"
+                  accept="video/mp4,video/webm,video/*"
+                  onChange={(e) => e.target.files?.[0] && onUploadVideo(e.target.files[0])}
+                  className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-cocoa file:text-cocoa-foreground file:px-3 file:py-2 file:text-xs file:cursor-pointer"
+                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="…or paste hosted video URL (.mp4 / .webm)"
+                    value={draft.video?.startsWith("data:") ? "" : draft.video ?? ""}
+                    onChange={(e) => update("video", e.target.value)}
+                    className={inputCls}
+                  />
+                  {draft.video && (
+                    <button
+                      type="button"
+                      onClick={() => update("video", "")}
+                      className="px-3 rounded-lg border border-border text-xs hover:border-destructive hover:text-destructive whitespace-nowrap"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Tip: short, silent loops (5–15s, ≤25MB) work best. For longer or HD clips, host on a CDN and paste the URL.
+                </p>
               </div>
             </div>
           </label>
