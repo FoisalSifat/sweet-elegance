@@ -208,7 +208,9 @@ function SlideDrawer({
 
         <div className="p-6 space-y-5">
           <label className="block">
-            <span className="text-xs font-medium text-cocoa block mb-1.5">Background image</span>
+            <span className="text-xs font-medium text-cocoa block mb-1.5">
+              Background image <span className="text-muted-foreground font-normal">(used as poster if a video is set)</span>
+            </span>
             <div className="flex items-center gap-4">
               <div className="w-28 h-20 rounded-xl bg-muted overflow-hidden flex-shrink-0">
                 {draft.image && (
@@ -219,7 +221,7 @@ function SlideDrawer({
                 <input
                   type="file"
                   accept="image/*"
-                  onChange={(e) => e.target.files?.[0] && onUpload(e.target.files[0])}
+                  onChange={(e) => e.target.files?.[0] && onUploadImage(e.target.files[0])}
                   className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-cocoa file:text-cocoa-foreground file:px-3 file:py-2 file:text-xs file:cursor-pointer"
                 />
                 <input
@@ -229,6 +231,50 @@ function SlideDrawer({
                   onChange={(e) => update("image", e.target.value)}
                   className={inputCls}
                 />
+              </div>
+            </div>
+          </label>
+
+          <label className="block">
+            <span className="text-xs font-medium text-cocoa block mb-1.5">
+              Background video <span className="text-muted-foreground font-normal">(optional — overrides the image, autoplays muted)</span>
+            </span>
+            <div className="flex items-center gap-4">
+              <div className="w-28 h-20 rounded-xl bg-muted overflow-hidden flex-shrink-0 flex items-center justify-center">
+                {draft.video ? (
+                  <video src={draft.video} muted loop playsInline autoPlay className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-[10px] text-muted-foreground">No video</span>
+                )}
+              </div>
+              <div className="space-y-2 flex-1">
+                <input
+                  type="file"
+                  accept="video/mp4,video/webm,video/*"
+                  onChange={(e) => e.target.files?.[0] && onUploadVideo(e.target.files[0])}
+                  className="block w-full text-xs text-muted-foreground file:mr-3 file:rounded-full file:border-0 file:bg-cocoa file:text-cocoa-foreground file:px-3 file:py-2 file:text-xs file:cursor-pointer"
+                />
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="…or paste hosted video URL (.mp4 / .webm)"
+                    value={draft.video?.startsWith("data:") ? "" : draft.video ?? ""}
+                    onChange={(e) => update("video", e.target.value)}
+                    className={inputCls}
+                  />
+                  {draft.video && (
+                    <button
+                      type="button"
+                      onClick={() => update("video", "")}
+                      className="px-3 rounded-lg border border-border text-xs hover:border-destructive hover:text-destructive whitespace-nowrap"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
+                <p className="text-[11px] text-muted-foreground leading-relaxed">
+                  Tip: short, silent loops (5–15s, ≤25MB) work best. For longer or HD clips, host on a CDN and paste the URL.
+                </p>
               </div>
             </div>
           </label>
