@@ -27,13 +27,17 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
+      className={`sticky top-0 z-40 transition-[background-color,box-shadow,border-color,transform] duration-500 ease-out ${
         scrolled
-          ? "bg-background/85 backdrop-blur-lg border-b border-border shadow-soft"
-          : "bg-background/0"
+          ? "bg-background border-b border-border shadow-[0_18px_45px_-30px_var(--cocoa)]"
+          : "bg-background/0 border-b border-transparent"
       }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between h-20 sm:h-24 lg:h-28">
+      <div
+        className={`container mx-auto px-4 sm:px-6 flex items-center justify-between transition-[height] duration-500 ease-out ${
+          scrolled ? "h-16 sm:h-20 lg:h-24" : "h-20 sm:h-24 lg:h-28"
+        }`}
+      >
         <button
           className="md:hidden p-2 -ml-2 text-cocoa"
           onClick={() => setMobileOpen(true)}
@@ -51,7 +55,9 @@ export function Navbar() {
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            className="h-16 sm:h-20 lg:h-24 w-auto max-w-[210px] sm:max-w-[260px] object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+            className={`w-auto max-w-[210px] sm:max-w-[260px] object-contain transition-[height,transform,filter] duration-500 ease-out group-hover:scale-[1.02] ${
+              scrolled ? "h-12 sm:h-16 lg:h-20" : "h-16 sm:h-20 lg:h-24"
+            }`}
           />
         </Link>
 
@@ -60,7 +66,7 @@ export function Navbar() {
             <Link
               key={l.label}
               to={l.to}
-              className="text-sm tracking-wide text-foreground/80 hover:text-cocoa relative after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-px after:w-0 after:bg-cocoa after:transition-all hover:after:w-full"
+                className="text-sm tracking-wide text-foreground/80 hover:text-cocoa relative transition-colors duration-300 after:content-[''] after:absolute after:left-0 after:-bottom-1 after:h-px after:w-0 after:bg-cocoa after:transition-all after:duration-300 hover:after:w-full"
             >
               {l.label}
             </Link>
