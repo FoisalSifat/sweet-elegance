@@ -15,7 +15,7 @@ const emptyProduct: Product = {
   price: 0,
   image: "",
   video: "",
-  category: "Cakes",
+  category: "Coffee",
   description: "",
   ingredients: "",
   sizes: [],
@@ -25,7 +25,7 @@ const emptyProduct: Product = {
 const MAX_IMAGE_BYTES = 4 * 1024 * 1024;
 const MAX_VIDEO_BYTES = 25 * 1024 * 1024;
 
-const categoryOptions = ["Cakes", "Brownies", "Pastries", "Gift Boxes"];
+const categoryOptions = ["Coffee", "Croissants", "Cakes", "Desserts", "Meals", "Gift Boxes"];
 const tagOptions = ["", "Best Seller", "Limited", "New"] as const;
 
 function ProductsAdmin() {
