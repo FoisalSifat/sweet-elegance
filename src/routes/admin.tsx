@@ -4,7 +4,7 @@ import {
   Outlet,
   useLocation,
 } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Package,
@@ -47,6 +47,9 @@ const nav: NavItem[] = [
 
 function AdminShell() {
   const authed = useAdminAuth();
+  useEffect(() => {
+    if (authed) void adminAuth.verify();
+  }, [authed]);
   if (!authed) return <AdminLogin />;
   return <AdminLayout />;
 }
@@ -57,11 +60,11 @@ function AdminLogin() {
   const [show, setShow] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (submitting) return;
     setSubmitting(true);
-    const ok = adminAuth.login(pw.trim());
+    const ok = await adminAuth.login(pw.trim());
     if (ok) {
       setErr(false);
       // No navigation needed — AdminShell re-renders to AdminLayout once authed flips.
