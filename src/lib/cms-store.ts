@@ -250,6 +250,9 @@ export const cmsStore = {
   getServerSnapshot() {
     return serverSnapshot;
   },
+  refreshFromCloud() {
+    void syncFromCloud();
+  },
 
   // Products
   upsertProduct(p: Product) {
