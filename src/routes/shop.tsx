@@ -8,16 +8,16 @@ import { useState } from "react";
 export const Route = createFileRoute("/shop")({
   head: () => ({
     meta: [
-      { title: "Shop All Desserts — IZ Patisserie" },
-      { name: "description", content: "Browse our full collection of cakes, brownies, pastries and gift boxes." },
+      { title: "Shop Cafe Menu — IZ Patisserie" },
+      { name: "description", content: "Browse IZ Patisserie & Cafe coffee, croissants, cakes, desserts and hearty meals." },
       { property: "og:title", content: "Shop — IZ Patisserie" },
-      { property: "og:description", content: "Hand-crafted cakes, brownies, macarons and gift boxes." },
+      { property: "og:description", content: "Quality coffee, croissants, cakes, desserts and comfort meals." },
     ],
   }),
   component: Shop,
 });
 
-const filters = ["All", "Cakes", "Brownies", "Pastries", "Gift Boxes"];
+const filters = ["All", "Coffee", "Croissants", "Cakes", "Desserts", "Meals"];
 
 function Shop() {
   const { products } = useCms();
@@ -30,10 +30,10 @@ function Shop() {
       <section className="container mx-auto px-4 sm:px-6 pt-12 pb-8 sm:pt-20">
         <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4">The Collection</p>
         <h1 className="font-serif text-5xl sm:text-6xl text-cocoa max-w-2xl leading-[1.05]">
-          Every dessert, hand-crafted with love.
+          Coffee, desserts and café favourites.
         </h1>
         <p className="mt-5 text-foreground/70 max-w-xl">
-          Browse our signature creations. Freshly baked, beautifully presented, ready to delight.
+          Browse signature coffee, croissants, chilled desserts and comforting meals from IZ Patisserie & Cafe.
         </p>
       </section>
 
