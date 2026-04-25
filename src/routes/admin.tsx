@@ -18,7 +18,7 @@ import {
   EyeOff,
 } from "lucide-react";
 import { adminAuth, useAdminAuth } from "@/lib/admin-auth";
-import { useCms } from "@/lib/cms-store";
+import { cmsStore, useCms } from "@/lib/cms-store";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
@@ -67,6 +67,7 @@ function AdminLogin() {
     const ok = await adminAuth.login(pw.trim());
     if (ok) {
       setErr(false);
+      cmsStore.refreshFromCloud();
       // No navigation needed — AdminShell re-renders to AdminLayout once authed flips.
     } else {
       setErr(true);
