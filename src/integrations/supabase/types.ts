@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      cms_admin_sessions: {
+        Row: {
+          created_at: string
+          expires_at: string
+          id: string
+          token_hash: string
+        }
+        Insert: {
+          created_at?: string
+          expires_at: string
+          id?: string
+          token_hash: string
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string
+          id?: string
+          token_hash?: string
+        }
+        Relationships: []
+      }
       cms_hero_slides: {
         Row: {
           created_at: string
