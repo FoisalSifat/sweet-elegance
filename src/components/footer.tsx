@@ -12,7 +12,11 @@ export function Footer() {
           <img
             src={izLogo}
             alt="IZ Patisserie & Cafe"
-            className="h-24 w-auto mb-4 object-contain"
+            width={240}
+            height={96}
+            loading="lazy"
+            decoding="async"
+            className="h-28 sm:h-32 w-auto mb-4 object-contain"
           />
           <p className="text-sm text-foreground/70 leading-relaxed max-w-xs">
             {settings.footerTagline}

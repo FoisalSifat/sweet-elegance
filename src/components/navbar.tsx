@@ -33,7 +33,7 @@ export function Navbar() {
           : "bg-background/0"
       }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between h-16 sm:h-20">
+      <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between h-20 sm:h-24 lg:h-28">
         <button
           className="md:hidden p-2 -ml-2 text-cocoa"
           onClick={() => setMobileOpen(true)}
@@ -46,12 +46,12 @@ export function Navbar() {
           <img
             src={izLogo}
             alt="IZ Patisserie & Cafe"
-            width={180}
-            height={72}
+            width={240}
+            height={96}
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            className="h-12 sm:h-14 lg:h-16 w-auto object-contain transition-transform duration-300 group-hover:scale-[1.03]"
+            className="h-16 sm:h-20 lg:h-24 w-auto max-w-[210px] sm:max-w-[260px] object-contain transition-transform duration-300 group-hover:scale-[1.02]"
           />
         </Link>
 
