@@ -14,7 +14,186 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      cms_hero_slides: {
+        Row: {
+          created_at: string
+          eyebrow: string
+          id: string
+          image: string
+          is_active: boolean
+          sort_order: number
+          sub: string
+          title: string
+          updated_at: string
+          video: string | null
+        }
+        Insert: {
+          created_at?: string
+          eyebrow?: string
+          id: string
+          image?: string
+          is_active?: boolean
+          sort_order?: number
+          sub?: string
+          title: string
+          updated_at?: string
+          video?: string | null
+        }
+        Update: {
+          created_at?: string
+          eyebrow?: string
+          id?: string
+          image?: string
+          is_active?: boolean
+          sort_order?: number
+          sub?: string
+          title?: string
+          updated_at?: string
+          video?: string | null
+        }
+        Relationships: []
+      }
+      cms_products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          flavors: string[]
+          image: string
+          ingredients: string
+          is_active: boolean
+          name: string
+          price: number
+          sizes: string[]
+          slug: string
+          sort_order: number
+          tag: string | null
+          updated_at: string
+          video: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          flavors?: string[]
+          image: string
+          ingredients?: string
+          is_active?: boolean
+          name: string
+          price: number
+          sizes?: string[]
+          slug: string
+          sort_order?: number
+          tag?: string | null
+          updated_at?: string
+          video?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          flavors?: string[]
+          image?: string
+          ingredients?: string
+          is_active?: boolean
+          name?: string
+          price?: number
+          sizes?: string[]
+          slug?: string
+          sort_order?: number
+          tag?: string | null
+          updated_at?: string
+          video?: string | null
+        }
+        Relationships: []
+      }
+      cms_site_settings: {
+        Row: {
+          announcements: string[]
+          contact: Json
+          created_at: string
+          footer_tagline: string
+          key: string
+          socials: Json
+          updated_at: string
+        }
+        Insert: {
+          announcements?: string[]
+          contact?: Json
+          created_at?: string
+          footer_tagline?: string
+          key?: string
+          socials?: Json
+          updated_at?: string
+        }
+        Update: {
+          announcements?: string[]
+          contact?: Json
+          created_at?: string
+          footer_tagline?: string
+          key?: string
+          socials?: Json
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      ecommerce_orders: {
+        Row: {
+          address: string
+          area: string
+          city: string
+          created_at: string
+          customer_name: string
+          delivery: number
+          email: string
+          id: string
+          items: Json
+          notes: string
+          payment: string
+          phone: string
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          area?: string
+          city?: string
+          created_at?: string
+          customer_name: string
+          delivery?: number
+          email?: string
+          id: string
+          items?: Json
+          notes?: string
+          payment?: string
+          phone: string
+          status?: string
+          subtotal: number
+          total: number
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          area?: string
+          city?: string
+          created_at?: string
+          customer_name?: string
+          delivery?: number
+          email?: string
+          id?: string
+          items?: Json
+          notes?: string
+          payment?: string
+          phone?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
