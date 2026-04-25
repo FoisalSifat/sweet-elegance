@@ -103,7 +103,7 @@ function ProductPage() {
             <div>
               <p className="text-sm font-medium text-cocoa mb-3">Size</p>
               <div className="flex flex-wrap gap-2">
-                {product.sizes.map((s) => (
+                {product.sizes.map((s: string) => (
                   <button
                     key={s}
                     onClick={() => setSize(s)}
@@ -122,7 +122,7 @@ function ProductPage() {
             <div>
               <p className="text-sm font-medium text-cocoa mb-3">Flavor</p>
               <div className="flex flex-wrap gap-2">
-                {product.flavors.map((f) => (
+                {product.flavors.map((f: string) => (
                   <button
                     key={f}
                     onClick={() => setFlavor(f)}
