@@ -169,7 +169,10 @@ async function syncFromCloud() {
   if (typeof window === "undefined") return;
   try {
     const remote = await getCmsState({ data: { adminToken: getAdminToken() } });
-    state = mergeWithDefaults(remote);
+    state = mergeWithDefaults({
+      ...remote,
+      settings: remote.settings || undefined,
+    });
     await idbSet(STORAGE_KEY, state);
     listeners.forEach((l) => l());
   } catch {
