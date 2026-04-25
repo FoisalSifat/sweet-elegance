@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import { loginAdmin, verifyAdminSession } from "@/lib/cms-functions";
+import { loginAdmin, verifyAdminSession } from "@/lib/cms.functions";
 
 const STORAGE_KEY = "iz-admin-auth-v1";
 const TOKEN_KEY = "iz-admin-token-v1";
