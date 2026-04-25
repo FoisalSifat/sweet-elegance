@@ -15,7 +15,7 @@ import {
   saveSlideOrder,
   saveSlideRecord,
   updateOrderStatusRecord,
-} from "@/lib/cms-functions";
+} from "@/lib/cms.functions";
 
 export type HeroSlide = {
   id: string;
