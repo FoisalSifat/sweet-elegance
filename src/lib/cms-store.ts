@@ -4,6 +4,18 @@ import heroCake from "@/assets/iz-hero-cake.jpg";
 import heroPastries from "@/assets/iz-macarons.jpg";
 import heroInterior from "@/assets/iz-interior.jpg";
 import { idbGet, idbSet } from "@/lib/cms-storage";
+import {
+  getCmsState,
+  removeOrderRecord,
+  removeProductRecord,
+  removeSlideRecord,
+  saveOrderRecord,
+  saveProductRecord,
+  saveSettingsRecord,
+  saveSlideOrder,
+  saveSlideRecord,
+  updateOrderStatusRecord,
+} from "@/lib/cms-functions";
 
 export type HeroSlide = {
   id: string;
@@ -54,6 +66,7 @@ type State = {
 };
 
 const STORAGE_KEY = "iz-cms-v1";
+const ADMIN_TOKEN_KEY = "iz-admin-token-v1";
 
 const defaultSlides: HeroSlide[] = [
   {
@@ -143,6 +156,31 @@ if (typeof window !== "undefined") {
   });
 }
 
+function getAdminToken() {
+  if (typeof window === "undefined") return null;
+  try {
+    return window.localStorage.getItem(ADMIN_TOKEN_KEY);
+  } catch {
+    return null;
+  }
+}
+
+async function syncFromCloud() {
+  if (typeof window === "undefined") return;
+  try {
+    const remote = await getCmsState({ data: { adminToken: getAdminToken() } });
+    state = mergeWithDefaults(remote);
+    await idbSet(STORAGE_KEY, state);
+    listeners.forEach((l) => l());
+  } catch {
+    // Keep the local fallback usable if the network is temporarily unavailable.
+  }
+}
+
+if (typeof window !== "undefined") {
+  void syncFromCloud();
+}
+
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
 function persist() {
   if (typeof window === "undefined") return;
@@ -206,15 +244,19 @@ export const cmsStore = {
           : [p, ...s.products],
       };
     });
+    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(syncFromCloud);
   },
   removeProduct(slug: string) {
     setState((s) => ({ ...s, products: s.products.filter((p) => p.slug !== slug) }));
+    void removeProductRecord({ data: { adminToken: getAdminToken(), slug } });
   },
 
   // Slides
   upsertSlide(slide: HeroSlide) {
+    let sortOrder = 0;
     setState((s) => {
       const exists = s.slides.some((x) => x.id === slide.id);
+      sortOrder = exists ? s.slides.findIndex((x) => x.id === slide.id) : s.slides.length;
       return {
         ...s,
         slides: exists
@@ -222,11 +264,14 @@ export const cmsStore = {
           : [...s.slides, slide],
       };
     });
+    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(syncFromCloud);
   },
   removeSlide(id: string) {
     setState((s) => ({ ...s, slides: s.slides.filter((x) => x.id !== id) }));
+    void removeSlideRecord({ data: { adminToken: getAdminToken(), id } });
   },
   moveSlide(id: string, dir: -1 | 1) {
+    let ids: string[] = [];
     setState((s) => {
       const idx = s.slides.findIndex((x) => x.id === id);
       const next = idx + dir;
@@ -234,27 +279,33 @@ export const cmsStore = {
       const arr = [...s.slides];
       const [item] = arr.splice(idx, 1);
       arr.splice(next, 0, item);
+      ids = arr.map((x) => x.id);
       return { ...s, slides: arr };
     });
+    if (ids.length) void saveSlideOrder({ data: { adminToken: getAdminToken(), ids } });
   },
 
   // Settings
   updateSettings(patch: Partial<SiteSettings>) {
     setState((s) => ({ ...s, settings: { ...s.settings, ...patch } }));
+    void saveSettingsRecord({ data: { adminToken: getAdminToken(), settings: state.settings } });
   },
 
   // Orders
   addOrder(o: Order) {
     setState((s) => ({ ...s, orders: [o, ...s.orders] }));
+    void saveOrderRecord({ data: { order: o } });
   },
   setOrderStatus(id: string, status: Order["status"]) {
     setState((s) => ({
       ...s,
       orders: s.orders.map((o) => (o.id === id ? { ...o, status } : o)),
     }));
+    void updateOrderStatusRecord({ data: { adminToken: getAdminToken(), id, status } });
   },
   removeOrder(id: string) {
     setState((s) => ({ ...s, orders: s.orders.filter((o) => o.id !== id) }));
+    void removeOrderRecord({ data: { adminToken: getAdminToken(), id } });
   },
 
   resetAll() {
