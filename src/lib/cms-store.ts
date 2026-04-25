@@ -168,7 +168,22 @@ function getAdminToken() {
 async function syncFromCloud() {
   if (typeof window === "undefined") return;
   try {
+    const adminToken = getAdminToken();
     const remote = await getCmsState({ data: { adminToken: getAdminToken() } });
+    if (remote.products.length === 0 && state.products.length > 0 && adminToken) {
+      await Promise.all([
+        ...state.products.map((product) => saveProductRecord({ data: { adminToken, product } })),
+        ...state.slides.map((slide, sortOrder) =>
+          saveSlideRecord({ data: { adminToken, slide, sortOrder } }),
+        ),
+        saveSettingsRecord({ data: { adminToken, settings: state.settings } }),
+      ]);
+      const seeded = await getCmsState({ data: { adminToken } });
+      state = mergeWithDefaults({ ...seeded, settings: seeded.settings || undefined });
+      await idbSet(STORAGE_KEY, state);
+      listeners.forEach((l) => l());
+      return;
+    }
     state = mergeWithDefaults({
       ...remote,
       settings: remote.settings || undefined,
