@@ -47,11 +47,35 @@ const nav: NavItem[] = [
 
 function AdminShell() {
   const authed = useAdminAuth();
+  const [checking, setChecking] = useState(authed);
   useEffect(() => {
-    if (authed) void adminAuth.verify();
+    if (!authed) {
+      setChecking(false);
+      return;
+    }
+    let active = true;
+    setChecking(true);
+    void adminAuth.verify().finally(() => {
+      if (active) setChecking(false);
+    });
+    return () => {
+      active = false;
+    };
   }, [authed]);
   if (!authed) return <AdminLogin />;
+  if (checking) return <AdminLoading />;
   return <AdminLayout />;
+}
+
+function AdminLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-cream to-blush/30 flex items-center justify-center p-6">
+      <div className="flex items-center gap-3 rounded-full border border-border bg-card px-5 py-3 text-sm text-cocoa shadow-elegant">
+        <span className="h-4 w-4 animate-spin rounded-full border-2 border-cocoa/20 border-t-cocoa" />
+        Opening admin panel…
+      </div>
+    </div>
+  );
 }
 
 function AdminLogin() {
@@ -67,7 +91,7 @@ function AdminLogin() {
     const ok = await adminAuth.login(pw.trim());
     if (ok) {
       setErr(false);
-      cmsStore.refreshFromCloud();
+      window.setTimeout(() => cmsStore.refreshFromCloud(), 0);
       // No navigation needed — AdminShell re-renders to AdminLayout once authed flips.
     } else {
       setErr(true);
