@@ -9,6 +9,8 @@ export const ADMIN_PASSWORD = "izadmin2025";
 
 let authed = typeof window !== "undefined" && window.localStorage.getItem(STORAGE_KEY) === "1";
 const listeners = new Set<() => void>();
+let verifyPromise: Promise<boolean> | null = null;
+let lastVerifiedAt = 0;
 
 function emit() {
   listeners.forEach((l) => l());
@@ -30,6 +32,7 @@ export const adminAuth = {
       const result = await loginAdmin({ data: { password } });
       if (!result.ok) return false;
       authed = true;
+      lastVerifiedAt = Date.now();
       try {
         window.localStorage.setItem(STORAGE_KEY, "1");
         window.localStorage.setItem(TOKEN_KEY, result.token);
@@ -54,15 +57,25 @@ export const adminAuth = {
   },
   async verify() {
     if (typeof window === "undefined") return false;
+    if (lastVerifiedAt && Date.now() - lastVerifiedAt < 60_000) return authed;
+    if (verifyPromise) return verifyPromise;
     const token = window.localStorage.getItem(TOKEN_KEY);
-    const result = await verifyAdminSession({ data: { token } });
-    authed = result.ok;
-    if (!result.ok) {
-      window.localStorage.removeItem(STORAGE_KEY);
-      window.localStorage.removeItem(TOKEN_KEY);
-    }
-    emit();
-    return result.ok;
+    verifyPromise = verifyAdminSession({ data: { token } })
+      .then((result) => {
+        authed = result.ok;
+        lastVerifiedAt = result.ok ? Date.now() : 0;
+        if (!result.ok) {
+          window.localStorage.removeItem(STORAGE_KEY);
+          window.localStorage.removeItem(TOKEN_KEY);
+        }
+        emit();
+        return result.ok;
+      })
+      .catch(() => authed)
+      .finally(() => {
+        verifyPromise = null;
+      });
+    return verifyPromise;
   },
 };
 
