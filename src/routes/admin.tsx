@@ -1,9 +1,4 @@
-import {
-  createFileRoute,
-  Link,
-  Outlet,
-  useLocation,
-} from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard,
@@ -22,10 +17,7 @@ import { cmsStore, useCms } from "@/lib/cms-store";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({
-    meta: [
-      { title: "Admin · IZ Patisserie" },
-      { name: "robots", content: "noindex, nofollow" },
-    ],
+    meta: [{ title: "Admin · IZ Patisserie" }, { name: "robots", content: "noindex, nofollow" }],
   }),
   component: AdminShell,
 });
@@ -136,9 +128,7 @@ function AdminLogin() {
             {show ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
-        {err && (
-          <p className="mt-2 text-xs text-destructive">Incorrect password.</p>
-        )}
+        {err && <p className="mt-2 text-xs text-destructive">Incorrect password.</p>}
 
         <button
           type="submit"
@@ -174,9 +164,7 @@ function AdminLayout() {
         }`}
       >
         <div className="px-6 pt-7 pb-6 border-b border-cocoa-foreground/10">
-          <p className="text-[10px] tracking-[0.32em] uppercase opacity-70">
-            IZ Patisserie
-          </p>
+          <p className="text-[10px] tracking-[0.32em] uppercase opacity-70">IZ Patisserie</p>
           <h2 className="font-serif text-2xl mt-1">Admin Panel</h2>
         </div>
 
@@ -192,9 +180,7 @@ function AdminLayout() {
                 to={to}
                 onClick={() => setOpen(false)}
                 className={`flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl text-sm transition ${
-                  active
-                    ? "bg-cream text-cocoa font-medium"
-                    : "hover:bg-cocoa-foreground/10"
+                  active ? "bg-cream text-cocoa font-medium" : "hover:bg-cocoa-foreground/10"
                 }`}
               >
                 <span className="flex items-center gap-3">
@@ -230,10 +216,7 @@ function AdminLayout() {
       </aside>
 
       {open && (
-        <div
-          className="fixed inset-0 bg-cocoa/60 z-30 lg:hidden"
-          onClick={() => setOpen(false)}
-        />
+        <div className="fixed inset-0 bg-cocoa/60 z-30 lg:hidden" onClick={() => setOpen(false)} />
       )}
 
       {/* Main */}

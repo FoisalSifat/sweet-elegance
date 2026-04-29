@@ -217,7 +217,9 @@ async function syncFromCloudInternal() {
       );
       if (missingLocalProducts.length > 0) {
         await Promise.all(
-          missingLocalProducts.map((product) => saveProductRecord({ data: { adminToken, product } })),
+          missingLocalProducts.map((product) =>
+            saveProductRecord({ data: { adminToken, product } }),
+          ),
         );
         const mergedRemote = await getCmsState({ data: { adminToken } });
         state = mergeWithDefaults({
@@ -257,9 +259,7 @@ function persist() {
     try {
       const slim: State = {
         ...state,
-        products: state.products.map((p) =>
-          isHeavy(p.image) ? { ...p, image: "" } : p,
-        ),
+        products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
         slides: state.slides.map((s) => ({
           ...s,
           image: isHeavy(s.image) ? "" : s.image,
@@ -307,12 +307,12 @@ export const cmsStore = {
       const exists = s.products.some((x) => x.slug === p.slug);
       return {
         ...s,
-        products: exists
-          ? s.products.map((x) => (x.slug === p.slug ? p : x))
-          : [p, ...s.products],
+        products: exists ? s.products.map((x) => (x.slug === p.slug ? p : x)) : [p, ...s.products],
       };
     });
-    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(syncFromCloud);
+    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(
+      syncFromCloud,
+    );
   },
   removeProduct(slug: string) {
     setState((s) => ({ ...s, products: s.products.filter((p) => p.slug !== slug) }));
@@ -332,7 +332,9 @@ export const cmsStore = {
           : [...s.slides, slide],
       };
     });
-    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(syncFromCloud);
+    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(
+      syncFromCloud,
+    );
   },
   removeSlide(id: string) {
     setState((s) => ({ ...s, slides: s.slides.filter((x) => x.id !== id) }));
@@ -382,11 +384,7 @@ export const cmsStore = {
 };
 
 export function useCms() {
-  return useSyncExternalStore(
-    cmsStore.subscribe,
-    cmsStore.getSnapshot,
-    cmsStore.getServerSnapshot,
-  );
+  return useSyncExternalStore(cmsStore.subscribe, cmsStore.getSnapshot, cmsStore.getServerSnapshot);
 }
 
 // File -> dataURL helper for image uploads in admin
