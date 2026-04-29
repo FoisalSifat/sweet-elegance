@@ -158,6 +158,8 @@ function loadInitialSync(): State {
 
 let state: State = loadInitialSync();
 const listeners = new Set<() => void>();
+let syncPromise: Promise<void> | null = null;
+let lastSyncAt = 0;
 
 // Hydrate from IndexedDB (handles large image/video data URLs that exceed
 // the localStorage quota). Once hydrated, future writes go to IDB primarily
@@ -181,9 +183,19 @@ function getAdminToken() {
 
 async function syncFromCloud() {
   if (typeof window === "undefined") return;
+  if (syncPromise) return syncPromise;
+  if (lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
+  syncPromise = syncFromCloudInternal().finally(() => {
+    lastSyncAt = Date.now();
+    syncPromise = null;
+  });
+  return syncPromise;
+}
+
+async function syncFromCloudInternal() {
   try {
     const adminToken = getAdminToken();
-    const remote = await getCmsState({ data: { adminToken: getAdminToken() } });
+    const remote = await getCmsState({ data: { adminToken } });
     if (remote.products.length === 0 && state.products.length > 0 && adminToken) {
       await Promise.all([
         ...state.products.map((product) => saveProductRecord({ data: { adminToken, product } })),
@@ -205,7 +217,9 @@ async function syncFromCloud() {
       );
       if (missingLocalProducts.length > 0) {
         await Promise.all(
-          missingLocalProducts.map((product) => saveProductRecord({ data: { adminToken, product } })),
+          missingLocalProducts.map((product) =>
+            saveProductRecord({ data: { adminToken, product } }),
+          ),
         );
         const mergedRemote = await getCmsState({ data: { adminToken } });
         state = mergeWithDefaults({
@@ -245,9 +259,7 @@ function persist() {
     try {
       const slim: State = {
         ...state,
-        products: state.products.map((p) =>
-          isHeavy(p.image) ? { ...p, image: "" } : p,
-        ),
+        products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
         slides: state.slides.map((s) => ({
           ...s,
           image: isHeavy(s.image) ? "" : s.image,
@@ -285,6 +297,7 @@ export const cmsStore = {
     return serverSnapshot;
   },
   refreshFromCloud() {
+    lastSyncAt = 0;
     void syncFromCloud();
   },
 
@@ -294,12 +307,12 @@ export const cmsStore = {
       const exists = s.products.some((x) => x.slug === p.slug);
       return {
         ...s,
-        products: exists
-          ? s.products.map((x) => (x.slug === p.slug ? p : x))
-          : [p, ...s.products],
+        products: exists ? s.products.map((x) => (x.slug === p.slug ? p : x)) : [p, ...s.products],
       };
     });
-    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(syncFromCloud);
+    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(
+      syncFromCloud,
+    );
   },
   removeProduct(slug: string) {
     setState((s) => ({ ...s, products: s.products.filter((p) => p.slug !== slug) }));
@@ -319,7 +332,9 @@ export const cmsStore = {
           : [...s.slides, slide],
       };
     });
-    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(syncFromCloud);
+    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(
+      syncFromCloud,
+    );
   },
   removeSlide(id: string) {
     setState((s) => ({ ...s, slides: s.slides.filter((x) => x.id !== id) }));
@@ -369,11 +384,7 @@ export const cmsStore = {
 };
 
 export function useCms() {
-  return useSyncExternalStore(
-    cmsStore.subscribe,
-    cmsStore.getSnapshot,
-    cmsStore.getServerSnapshot,
-  );
+  return useSyncExternalStore(cmsStore.subscribe, cmsStore.getSnapshot, cmsStore.getServerSnapshot);
 }
 
 // File -> dataURL helper for image uploads in admin
