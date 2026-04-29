@@ -122,6 +122,20 @@ const defaultState: State = {
   orders: [],
 };
 
+function hasProductChangedFromDefault(product: Product) {
+  const original = defaultProducts.find((item) => item.slug === product.slug);
+  if (!original) return true;
+  return JSON.stringify(original) !== JSON.stringify(product);
+}
+
+function mergeProducts(primary: Product[], fallback: Product[]) {
+  const merged = [...primary];
+  fallback.forEach((product) => {
+    if (!merged.some((item) => item.slug === product.slug)) merged.push(product);
+  });
+  return merged;
+}
+
 function mergeWithDefaults(parsed: Partial<State>): State {
   return {
     products: parsed.products?.length ? parsed.products : defaultState.products,
@@ -183,6 +197,26 @@ async function syncFromCloud() {
       await idbSet(STORAGE_KEY, state);
       listeners.forEach((l) => l());
       return;
+    }
+    if (adminToken) {
+      const localProducts = state.products.filter(hasProductChangedFromDefault);
+      const missingLocalProducts = localProducts.filter(
+        (product) => !remote.products.some((remoteProduct) => remoteProduct.slug === product.slug),
+      );
+      if (missingLocalProducts.length > 0) {
+        await Promise.all(
+          missingLocalProducts.map((product) => saveProductRecord({ data: { adminToken, product } })),
+        );
+        const mergedRemote = await getCmsState({ data: { adminToken } });
+        state = mergeWithDefaults({
+          ...mergedRemote,
+          products: mergeProducts(mergedRemote.products, localProducts),
+          settings: mergedRemote.settings || undefined,
+        });
+        await idbSet(STORAGE_KEY, state);
+        listeners.forEach((l) => l());
+        return;
+      }
     }
     state = mergeWithDefaults({
       ...remote,
