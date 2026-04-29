@@ -158,6 +158,8 @@ function loadInitialSync(): State {
 
 let state: State = loadInitialSync();
 const listeners = new Set<() => void>();
+let syncPromise: Promise<void> | null = null;
+let lastSyncAt = 0;
 
 // Hydrate from IndexedDB (handles large image/video data URLs that exceed
 // the localStorage quota). Once hydrated, future writes go to IDB primarily
@@ -181,9 +183,19 @@ function getAdminToken() {
 
 async function syncFromCloud() {
   if (typeof window === "undefined") return;
+  if (syncPromise) return syncPromise;
+  if (lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
+  syncPromise = syncFromCloudInternal().finally(() => {
+    lastSyncAt = Date.now();
+    syncPromise = null;
+  });
+  return syncPromise;
+}
+
+async function syncFromCloudInternal() {
   try {
     const adminToken = getAdminToken();
-    const remote = await getCmsState({ data: { adminToken: getAdminToken() } });
+    const remote = await getCmsState({ data: { adminToken } });
     if (remote.products.length === 0 && state.products.length > 0 && adminToken) {
       await Promise.all([
         ...state.products.map((product) => saveProductRecord({ data: { adminToken, product } })),
@@ -285,6 +297,7 @@ export const cmsStore = {
     return serverSnapshot;
   },
   refreshFromCloud() {
+    lastSyncAt = 0;
     void syncFromCloud();
   },
 
