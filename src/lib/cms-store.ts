@@ -181,10 +181,10 @@ function getAdminToken() {
   }
 }
 
-async function syncFromCloud() {
+async function syncFromCloud(force = false) {
   if (typeof window === "undefined") return;
   if (syncPromise) return syncPromise;
-  if (lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
+  if (!force && lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
   syncPromise = syncFromCloudInternal().finally(() => {
     lastSyncAt = Date.now();
     syncPromise = null;
@@ -247,30 +247,33 @@ if (typeof window !== "undefined") {
   void syncFromCloud();
 }
 
+async function persistNow() {
+  if (typeof window === "undefined") return;
+  await idbSet(STORAGE_KEY, state);
+  // Mirror a lightweight copy to localStorage for synchronous initial paint.
+  // Strip out heavy data URLs (>200KB) so we never blow the quota.
+  try {
+    const slim: State = {
+      ...state,
+      products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
+      slides: state.slides.map((s) => ({
+        ...s,
+        image: isHeavy(s.image) ? "" : s.image,
+        video: isHeavy(s.video) ? undefined : s.video,
+      })),
+    };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
+  } catch {
+    /* localStorage quota — IDB still has the full copy */
+  }
+}
+
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
 function persist() {
   if (typeof window === "undefined") return;
   // Debounce to avoid hammering IDB on rapid edits.
   if (persistTimer) clearTimeout(persistTimer);
-  persistTimer = setTimeout(() => {
-    void idbSet(STORAGE_KEY, state);
-    // Mirror a lightweight copy to localStorage for synchronous initial paint.
-    // Strip out heavy data URLs (>200KB) so we never blow the quota.
-    try {
-      const slim: State = {
-        ...state,
-        products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
-        slides: state.slides.map((s) => ({
-          ...s,
-          image: isHeavy(s.image) ? "" : s.image,
-          video: isHeavy(s.video) ? undefined : s.video,
-        })),
-      };
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
-    } catch {
-      /* localStorage quota — IDB still has the full copy */
-    }
-  }, 120);
+  persistTimer = setTimeout(() => void persistNow(), 120);
 }
 
 function isHeavy(url?: string) {
