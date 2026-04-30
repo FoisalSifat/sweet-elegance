@@ -128,10 +128,24 @@ function hasProductChangedFromDefault(product: Product) {
   return JSON.stringify(original) !== JSON.stringify(product);
 }
 
+function hasSlideChangedFromDefault(slide: HeroSlide) {
+  const original = defaultSlides.find((item) => item.id === slide.id);
+  if (!original) return true;
+  return JSON.stringify(original) !== JSON.stringify(slide);
+}
+
 function mergeProducts(primary: Product[], fallback: Product[]) {
   const merged = [...primary];
   fallback.forEach((product) => {
     if (!merged.some((item) => item.slug === product.slug)) merged.push(product);
+  });
+  return merged;
+}
+
+function mergeSlides(primary: HeroSlide[], fallback: HeroSlide[]) {
+  const merged = [...primary];
+  fallback.forEach((slide) => {
+    if (!merged.some((item) => item.id === slide.id)) merged.push(slide);
   });
   return merged;
 }
@@ -212,19 +226,29 @@ async function syncFromCloudInternal() {
     }
     if (adminToken) {
       const localProducts = state.products.filter(hasProductChangedFromDefault);
+      const localSlides = state.slides.filter(hasSlideChangedFromDefault);
       const missingLocalProducts = localProducts.filter(
         (product) => !remote.products.some((remoteProduct) => remoteProduct.slug === product.slug),
       );
-      if (missingLocalProducts.length > 0) {
+      const missingLocalSlides = localSlides.filter(
+        (slide) => !remote.slides.some((remoteSlide) => remoteSlide.id === slide.id),
+      );
+      if (missingLocalProducts.length > 0 || missingLocalSlides.length > 0) {
         await Promise.all(
           missingLocalProducts.map((product) =>
             saveProductRecord({ data: { adminToken, product } }),
+          ),
+        );
+        await Promise.all(
+          missingLocalSlides.map((slide, sortOrder) =>
+            saveSlideRecord({ data: { adminToken, slide, sortOrder } }),
           ),
         );
         const mergedRemote = await getCmsState({ data: { adminToken } });
         state = mergeWithDefaults({
           ...mergedRemote,
           products: mergeProducts(mergedRemote.products, localProducts),
+          slides: mergeSlides(mergedRemote.slides, localSlides),
           settings: mergedRemote.settings || undefined,
         });
         await idbSet(STORAGE_KEY, state);
