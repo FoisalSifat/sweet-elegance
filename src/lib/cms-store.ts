@@ -197,7 +197,10 @@ function getAdminToken() {
 
 async function syncFromCloud(force = false) {
   if (typeof window === "undefined") return;
-  if (syncPromise) return syncPromise;
+  if (syncPromise) {
+    await syncPromise;
+    if (!force) return;
+  }
   if (!force && lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
   syncPromise = syncFromCloudInternal().finally(() => {
     lastSyncAt = Date.now();
