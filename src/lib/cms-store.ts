@@ -305,7 +305,7 @@ export const cmsStore = {
   },
 
   // Products
-  upsertProduct(p: Product) {
+  async upsertProduct(p: Product) {
     setState((s) => {
       const exists = s.products.some((x) => x.slug === p.slug);
       return {
@@ -313,10 +313,9 @@ export const cmsStore = {
         products: exists ? s.products.map((x) => (x.slug === p.slug ? p : x)) : [p, ...s.products],
       };
     });
-    void persistNow();
-    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(() =>
-      syncFromCloud(true),
-    );
+    await persistNow();
+    await saveProductRecord({ data: { adminToken: getAdminToken(), product: p } });
+    await syncFromCloud(true);
   },
   removeProduct(slug: string) {
     setState((s) => ({ ...s, products: s.products.filter((p) => p.slug !== slug) }));
@@ -324,7 +323,7 @@ export const cmsStore = {
   },
 
   // Slides
-  upsertSlide(slide: HeroSlide) {
+  async upsertSlide(slide: HeroSlide) {
     let sortOrder = 0;
     setState((s) => {
       const exists = s.slides.some((x) => x.id === slide.id);
@@ -336,10 +335,9 @@ export const cmsStore = {
           : [...s.slides, slide],
       };
     });
-    void persistNow();
-    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(() =>
-      syncFromCloud(true),
-    );
+    await persistNow();
+    await saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } });
+    await syncFromCloud(true);
   },
   removeSlide(id: string) {
     setState((s) => ({ ...s, slides: s.slides.filter((x) => x.id !== id) }));
