@@ -136,9 +136,14 @@ function BannersAdmin() {
         <SlideDrawer
           slide={editing}
           onClose={() => setEditing(null)}
-          onSave={(s) => {
-            cmsStore.upsertSlide(s);
-            toast.success("Slide saved");
+          onSave={async (s) => {
+            try {
+              await cmsStore.upsertSlide(s);
+              toast.success("Slide saved to database");
+            } catch (error) {
+              toast.error(error instanceof Error ? error.message : "Slide could not be saved");
+              return;
+            }
             setEditing(null);
           }}
         />

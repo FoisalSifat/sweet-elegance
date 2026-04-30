@@ -133,9 +133,14 @@ function ProductsAdmin() {
         <ProductDrawer
           product={editing}
           onClose={() => setEditing(null)}
-          onSave={(p) => {
-            cmsStore.upsertProduct(p);
-            toast.success("Product saved");
+          onSave={async (p) => {
+            try {
+              await cmsStore.upsertProduct(p);
+              toast.success("Product saved to database");
+            } catch (error) {
+              toast.error(error instanceof Error ? error.message : "Product could not be saved");
+              return;
+            }
             setEditing(null);
           }}
         />

@@ -128,10 +128,24 @@ function hasProductChangedFromDefault(product: Product) {
   return JSON.stringify(original) !== JSON.stringify(product);
 }
 
+function hasSlideChangedFromDefault(slide: HeroSlide) {
+  const original = defaultSlides.find((item) => item.id === slide.id);
+  if (!original) return true;
+  return JSON.stringify(original) !== JSON.stringify(slide);
+}
+
 function mergeProducts(primary: Product[], fallback: Product[]) {
   const merged = [...primary];
   fallback.forEach((product) => {
     if (!merged.some((item) => item.slug === product.slug)) merged.push(product);
+  });
+  return merged;
+}
+
+function mergeSlides(primary: HeroSlide[], fallback: HeroSlide[]) {
+  const merged = [...primary];
+  fallback.forEach((slide) => {
+    if (!merged.some((item) => item.id === slide.id)) merged.push(slide);
   });
   return merged;
 }
@@ -181,10 +195,13 @@ function getAdminToken() {
   }
 }
 
-async function syncFromCloud() {
+async function syncFromCloud(force = false) {
   if (typeof window === "undefined") return;
-  if (syncPromise) return syncPromise;
-  if (lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
+  if (syncPromise) {
+    await syncPromise;
+    if (!force) return;
+  }
+  if (!force && lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
   syncPromise = syncFromCloudInternal().finally(() => {
     lastSyncAt = Date.now();
     syncPromise = null;
@@ -212,19 +229,29 @@ async function syncFromCloudInternal() {
     }
     if (adminToken) {
       const localProducts = state.products.filter(hasProductChangedFromDefault);
+      const localSlides = state.slides.filter(hasSlideChangedFromDefault);
       const missingLocalProducts = localProducts.filter(
         (product) => !remote.products.some((remoteProduct) => remoteProduct.slug === product.slug),
       );
-      if (missingLocalProducts.length > 0) {
+      const missingLocalSlides = localSlides.filter(
+        (slide) => !remote.slides.some((remoteSlide) => remoteSlide.id === slide.id),
+      );
+      if (missingLocalProducts.length > 0 || missingLocalSlides.length > 0) {
         await Promise.all(
           missingLocalProducts.map((product) =>
             saveProductRecord({ data: { adminToken, product } }),
+          ),
+        );
+        await Promise.all(
+          missingLocalSlides.map((slide, sortOrder) =>
+            saveSlideRecord({ data: { adminToken, slide, sortOrder } }),
           ),
         );
         const mergedRemote = await getCmsState({ data: { adminToken } });
         state = mergeWithDefaults({
           ...mergedRemote,
           products: mergeProducts(mergedRemote.products, localProducts),
+          slides: mergeSlides(mergedRemote.slides, localSlides),
           settings: mergedRemote.settings || undefined,
         });
         await idbSet(STORAGE_KEY, state);
@@ -247,30 +274,33 @@ if (typeof window !== "undefined") {
   void syncFromCloud();
 }
 
+async function persistNow() {
+  if (typeof window === "undefined") return;
+  await idbSet(STORAGE_KEY, state);
+  // Mirror a lightweight copy to localStorage for synchronous initial paint.
+  // Strip out heavy data URLs (>200KB) so we never blow the quota.
+  try {
+    const slim: State = {
+      ...state,
+      products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
+      slides: state.slides.map((s) => ({
+        ...s,
+        image: isHeavy(s.image) ? "" : s.image,
+        video: isHeavy(s.video) ? undefined : s.video,
+      })),
+    };
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
+  } catch {
+    /* localStorage quota — IDB still has the full copy */
+  }
+}
+
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
 function persist() {
   if (typeof window === "undefined") return;
   // Debounce to avoid hammering IDB on rapid edits.
   if (persistTimer) clearTimeout(persistTimer);
-  persistTimer = setTimeout(() => {
-    void idbSet(STORAGE_KEY, state);
-    // Mirror a lightweight copy to localStorage for synchronous initial paint.
-    // Strip out heavy data URLs (>200KB) so we never blow the quota.
-    try {
-      const slim: State = {
-        ...state,
-        products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
-        slides: state.slides.map((s) => ({
-          ...s,
-          image: isHeavy(s.image) ? "" : s.image,
-          video: isHeavy(s.video) ? undefined : s.video,
-        })),
-      };
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(slim));
-    } catch {
-      /* localStorage quota — IDB still has the full copy */
-    }
-  }, 120);
+  persistTimer = setTimeout(() => void persistNow(), 120);
 }
 
 function isHeavy(url?: string) {
@@ -298,11 +328,11 @@ export const cmsStore = {
   },
   refreshFromCloud() {
     lastSyncAt = 0;
-    void syncFromCloud();
+    void syncFromCloud(true);
   },
 
   // Products
-  upsertProduct(p: Product) {
+  async upsertProduct(p: Product) {
     setState((s) => {
       const exists = s.products.some((x) => x.slug === p.slug);
       return {
@@ -310,9 +340,9 @@ export const cmsStore = {
         products: exists ? s.products.map((x) => (x.slug === p.slug ? p : x)) : [p, ...s.products],
       };
     });
-    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(
-      syncFromCloud,
-    );
+    await persistNow();
+    await saveProductRecord({ data: { adminToken: getAdminToken(), product: p } });
+    await syncFromCloud(true);
   },
   removeProduct(slug: string) {
     setState((s) => ({ ...s, products: s.products.filter((p) => p.slug !== slug) }));
@@ -320,7 +350,7 @@ export const cmsStore = {
   },
 
   // Slides
-  upsertSlide(slide: HeroSlide) {
+  async upsertSlide(slide: HeroSlide) {
     let sortOrder = 0;
     setState((s) => {
       const exists = s.slides.some((x) => x.id === slide.id);
@@ -332,9 +362,9 @@ export const cmsStore = {
           : [...s.slides, slide],
       };
     });
-    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(
-      syncFromCloud,
-    );
+    await persistNow();
+    await saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } });
+    await syncFromCloud(true);
   },
   removeSlide(id: string) {
     setState((s) => ({ ...s, slides: s.slides.filter((x) => x.id !== id) }));
