@@ -301,7 +301,7 @@ export const cmsStore = {
   },
   refreshFromCloud() {
     lastSyncAt = 0;
-    void syncFromCloud();
+    void syncFromCloud(true);
   },
 
   // Products
@@ -313,8 +313,9 @@ export const cmsStore = {
         products: exists ? s.products.map((x) => (x.slug === p.slug ? p : x)) : [p, ...s.products],
       };
     });
-    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(
-      syncFromCloud,
+    void persistNow();
+    void saveProductRecord({ data: { adminToken: getAdminToken(), product: p } }).then(() =>
+      syncFromCloud(true),
     );
   },
   removeProduct(slug: string) {
@@ -335,8 +336,9 @@ export const cmsStore = {
           : [...s.slides, slide],
       };
     });
-    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(
-      syncFromCloud,
+    void persistNow();
+    void saveSlideRecord({ data: { adminToken: getAdminToken(), slide, sortOrder } }).then(() =>
+      syncFromCloud(true),
     );
   },
   removeSlide(id: string) {
