@@ -272,12 +272,14 @@ if (typeof window !== "undefined") {
 
 async function persistNow() {
   if (typeof window === "undefined") return;
-  await idbSet(STORAGE_KEY, state);
+  const payload = { ...state, _hydrated: cloudHydrated };
+  await idbSet(STORAGE_KEY, payload);
   // Mirror a lightweight copy to localStorage for synchronous initial paint.
   // Strip out heavy data URLs (>200KB) so we never blow the quota.
   try {
-    const slim: State = {
+    const slim = {
       ...state,
+      _hydrated: cloudHydrated,
       products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
       slides: state.slides.map((s) => ({
         ...s,
