@@ -7,7 +7,7 @@ import izLogo from "@/assets/iz-logo.webp";
 const links = [
   { to: "/shop", label: "Shop" },
   { to: "/shop", label: "Cakes", search: { category: "Cakes" } },
-  { to: "/custom-cake", label: "Custom Orders" },
+  
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ] as const;
