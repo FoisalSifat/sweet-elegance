@@ -81,8 +81,16 @@ async function storeDataUrl(dataUrl: string, folder: string) {
 
 async function persistMedia(value: string | undefined, folder: string) {
   if (!value) return value;
-  if (!value.startsWith("data:")) return value;
-  return storeDataUrl(value, folder);
+  // New upload — base64 data URL needs to be stored.
+  if (value.startsWith("data:")) return storeDataUrl(value, folder);
+  // Already a stored reference — keep as is.
+  if (value.startsWith("cms-media/")) return value;
+  // Resolved Supabase signed URL — extract the underlying object path so we
+  // never persist a temporary token in the database.
+  const match = value.match(/\/storage\/v1\/object\/(?:sign|public)\/cms-media\/([^?#]+)/);
+  if (match) return `cms-media/${match[1]}`;
+  // Anything else (external URL, bundled asset path) — leave untouched.
+  return value;
 }
 
 async function resolveMedia(value: string | null | undefined) {
