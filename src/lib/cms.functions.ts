@@ -226,7 +226,7 @@ export const saveProductRecord = createServerFn({ method: "POST" })
       slug: data.product.slug,
       name: data.product.name,
       price: data.product.price,
-      image,
+      image: image || "",
       video: video || null,
       category: data.product.category,
       tag: data.product.tag || null,
@@ -235,7 +235,8 @@ export const saveProductRecord = createServerFn({ method: "POST" })
       sizes: data.product.sizes,
       flavors: data.product.flavors,
       is_active: true,
-    });
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "slug" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
