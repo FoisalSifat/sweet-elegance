@@ -242,7 +242,7 @@ async function syncFromCloudInternal() {
         saveSettingsRecord({ data: { adminToken, settings: defaultSettings } }),
       ]);
       const seeded = await getCmsState({ data: { adminToken } });
-      state = buildState(seeded, false);
+      state = buildState({ ...seeded, settings: seeded.settings || undefined }, false);
       cloudHydrated = true;
       await persistNow();
       listeners.forEach((l) => l());
