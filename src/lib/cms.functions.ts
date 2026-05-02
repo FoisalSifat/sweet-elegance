@@ -302,7 +302,8 @@ export const saveSettingsRecord = createServerFn({ method: "POST" })
       contact: data.settings.contact,
       footer_tagline: data.settings.footerTagline,
       socials: data.settings.socials,
-    });
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "key" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
