@@ -265,7 +265,8 @@ export const saveSlideRecord = createServerFn({ method: "POST" })
       sub: data.slide.sub,
       sort_order: data.sortOrder ?? 0,
       is_active: true,
-    });
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "id" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
