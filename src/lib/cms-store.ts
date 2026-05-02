@@ -122,40 +122,23 @@ const defaultState: State = {
   orders: [],
 };
 
-function hasProductChangedFromDefault(product: Product) {
-  const original = defaultProducts.find((item) => item.slug === product.slug);
-  if (!original) return true;
-  return JSON.stringify(original) !== JSON.stringify(product);
+
+function mergeSettings(parsed: Partial<SiteSettings> | null | undefined): SiteSettings {
+  return { ...defaultSettings, ...(parsed || {}) };
 }
 
-function hasSlideChangedFromDefault(slide: HeroSlide) {
-  const original = defaultSlides.find((item) => item.id === slide.id);
-  if (!original) return true;
-  return JSON.stringify(original) !== JSON.stringify(slide);
-}
-
-function mergeProducts(primary: Product[], fallback: Product[]) {
-  const merged = [...primary];
-  fallback.forEach((product) => {
-    if (!merged.some((item) => item.slug === product.slug)) merged.push(product);
-  });
-  return merged;
-}
-
-function mergeSlides(primary: HeroSlide[], fallback: HeroSlide[]) {
-  const merged = [...primary];
-  fallback.forEach((slide) => {
-    if (!merged.some((item) => item.id === slide.id)) merged.push(slide);
-  });
-  return merged;
-}
-
-function mergeWithDefaults(parsed: Partial<State>): State {
+/** Build a full state object. Empty arrays are KEPT empty when `useDefaultsForEmpty` is false. */
+function buildState(
+  parsed: Partial<State> | null | undefined,
+  useDefaultsForEmpty: boolean,
+): State {
+  const products = parsed?.products;
+  const slides = parsed?.slides;
   return {
-    products: parsed.products?.length ? parsed.products : defaultState.products,
-    slides: parsed.slides?.length ? parsed.slides : defaultState.slides,
-    settings: { ...defaultState.settings, ...(parsed.settings || {}) },
-    orders: parsed.orders || [],
+    products: products && products.length > 0 ? products : useDefaultsForEmpty ? defaultProducts : [],
+    slides: slides && slides.length > 0 ? slides : useDefaultsForEmpty ? defaultSlides : [],
+    settings: mergeSettings(parsed?.settings),
+    orders: parsed?.orders || [],
   };
 }
 
@@ -164,13 +147,17 @@ function loadInitialSync(): State {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return defaultState;
-    return mergeWithDefaults(JSON.parse(raw) as Partial<State>);
+    const parsed = JSON.parse(raw) as Partial<State> & { _hydrated?: boolean };
+    // If we've previously hydrated from cloud, trust the cache exactly (even
+    // if it's empty). Otherwise show defaults so the page isn't blank.
+    return buildState(parsed, !parsed._hydrated);
   } catch {
     return defaultState;
   }
 }
 
 let state: State = loadInitialSync();
+let cloudHydrated = false;
 const listeners = new Set<() => void>();
 let syncPromise: Promise<void> | null = null;
 let lastSyncAt = 0;
@@ -179,9 +166,11 @@ let lastSyncAt = 0;
 // the localStorage quota). Once hydrated, future writes go to IDB primarily
 // with a best-effort localStorage mirror for fast initial paint.
 if (typeof window !== "undefined") {
-  void idbGet<State>(STORAGE_KEY).then((stored) => {
+  void idbGet<State & { _hydrated?: boolean }>(STORAGE_KEY).then((stored) => {
     if (!stored) return;
-    state = mergeWithDefaults(stored);
+    // If IDB says we previously synced from cloud, use it verbatim.
+    state = buildState(stored, !(stored as any)._hydrated);
+    cloudHydrated = !!(stored as any)._hydrated;
     listeners.forEach((l) => l());
   });
 }
@@ -201,7 +190,7 @@ async function syncFromCloud(force = false) {
     await syncPromise;
     if (!force) return;
   }
-  if (!force && lastSyncAt && Date.now() - lastSyncAt < 45_000) return;
+  if (!force && lastSyncAt && Date.now() - lastSyncAt < 30_000) return;
   syncPromise = syncFromCloudInternal().finally(() => {
     lastSyncAt = Date.now();
     syncPromise = null;
@@ -213,60 +202,40 @@ async function syncFromCloudInternal() {
   try {
     const adminToken = getAdminToken();
     const remote = await getCmsState({ data: { adminToken } });
-    if (remote.products.length === 0 && state.products.length > 0 && adminToken) {
+    const cloudIsEmpty = remote.products.length === 0 && remote.slides.length === 0;
+
+    // First-time seed: cloud is completely empty AND we're admin → seed defaults
+    // to the cloud so visitors see something. Run only once.
+    if (cloudIsEmpty && adminToken) {
       await Promise.all([
-        ...state.products.map((product) => saveProductRecord({ data: { adminToken, product } })),
-        ...state.slides.map((slide, sortOrder) =>
+        ...defaultProducts.map((product) => saveProductRecord({ data: { adminToken, product } })),
+        ...defaultSlides.map((slide, sortOrder) =>
           saveSlideRecord({ data: { adminToken, slide, sortOrder } }),
         ),
-        saveSettingsRecord({ data: { adminToken, settings: state.settings } }),
+        saveSettingsRecord({ data: { adminToken, settings: defaultSettings } }),
       ]);
       const seeded = await getCmsState({ data: { adminToken } });
-      state = mergeWithDefaults({ ...seeded, settings: seeded.settings || undefined });
-      await idbSet(STORAGE_KEY, state);
+      state = buildState({ ...seeded, settings: seeded.settings || undefined }, false);
+      cloudHydrated = true;
+      await persistNow();
       listeners.forEach((l) => l());
       return;
     }
-    if (adminToken) {
-      const localProducts = state.products.filter(hasProductChangedFromDefault);
-      const localSlides = state.slides.filter(hasSlideChangedFromDefault);
-      const missingLocalProducts = localProducts.filter(
-        (product) => !remote.products.some((remoteProduct) => remoteProduct.slug === product.slug),
-      );
-      const missingLocalSlides = localSlides.filter(
-        (slide) => !remote.slides.some((remoteSlide) => remoteSlide.id === slide.id),
-      );
-      if (missingLocalProducts.length > 0 || missingLocalSlides.length > 0) {
-        await Promise.all(
-          missingLocalProducts.map((product) =>
-            saveProductRecord({ data: { adminToken, product } }),
-          ),
-        );
-        await Promise.all(
-          missingLocalSlides.map((slide, sortOrder) =>
-            saveSlideRecord({ data: { adminToken, slide, sortOrder } }),
-          ),
-        );
-        const mergedRemote = await getCmsState({ data: { adminToken } });
-        state = mergeWithDefaults({
-          ...mergedRemote,
-          products: mergeProducts(mergedRemote.products, localProducts),
-          slides: mergeSlides(mergedRemote.slides, localSlides),
-          settings: mergedRemote.settings || undefined,
-        });
-        await idbSet(STORAGE_KEY, state);
-        listeners.forEach((l) => l());
-        return;
-      }
-    }
-    state = mergeWithDefaults({
-      ...remote,
-      settings: remote.settings || undefined,
-    });
-    await idbSet(STORAGE_KEY, state);
+
+    // Cloud is the source of truth. Use it verbatim — even if some lists are
+    // empty (the admin may have intentionally removed everything).
+    state = buildState(
+      { ...remote, settings: remote.settings || undefined },
+      // Only fall back to defaults when cloud is genuinely uninitialised
+      // (both products and slides empty AND no settings row).
+      cloudIsEmpty && !remote.settings,
+    );
+    cloudHydrated = true;
+    await persistNow();
     listeners.forEach((l) => l());
   } catch {
-    // Keep the local fallback usable if the network is temporarily unavailable.
+    // Network failure: keep whatever we already have. Do not destructively
+    // overwrite local state on error.
   }
 }
 
@@ -276,12 +245,14 @@ if (typeof window !== "undefined") {
 
 async function persistNow() {
   if (typeof window === "undefined") return;
-  await idbSet(STORAGE_KEY, state);
+  const payload = { ...state, _hydrated: cloudHydrated };
+  await idbSet(STORAGE_KEY, payload);
   // Mirror a lightweight copy to localStorage for synchronous initial paint.
   // Strip out heavy data URLs (>200KB) so we never blow the quota.
   try {
-    const slim: State = {
+    const slim = {
       ...state,
+      _hydrated: cloudHydrated,
       products: state.products.map((p) => (isHeavy(p.image) ? { ...p, image: "" } : p)),
       slides: state.slides.map((s) => ({
         ...s,

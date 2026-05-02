@@ -81,8 +81,16 @@ async function storeDataUrl(dataUrl: string, folder: string) {
 
 async function persistMedia(value: string | undefined, folder: string) {
   if (!value) return value;
-  if (!value.startsWith("data:")) return value;
-  return storeDataUrl(value, folder);
+  // New upload — base64 data URL needs to be stored.
+  if (value.startsWith("data:")) return storeDataUrl(value, folder);
+  // Already a stored reference — keep as is.
+  if (value.startsWith("cms-media/")) return value;
+  // Resolved Supabase signed URL — extract the underlying object path so we
+  // never persist a temporary token in the database.
+  const match = value.match(/\/storage\/v1\/object\/(?:sign|public)\/cms-media\/([^?#]+)/);
+  if (match) return `cms-media/${match[1]}`;
+  // Anything else (external URL, bundled asset path) — leave untouched.
+  return value;
 }
 
 async function resolveMedia(value: string | null | undefined) {
@@ -218,7 +226,7 @@ export const saveProductRecord = createServerFn({ method: "POST" })
       slug: data.product.slug,
       name: data.product.name,
       price: data.product.price,
-      image,
+      image: image || "",
       video: video || null,
       category: data.product.category,
       tag: data.product.tag || null,
@@ -227,7 +235,8 @@ export const saveProductRecord = createServerFn({ method: "POST" })
       sizes: data.product.sizes,
       flavors: data.product.flavors,
       is_active: true,
-    });
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "slug" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -256,7 +265,8 @@ export const saveSlideRecord = createServerFn({ method: "POST" })
       sub: data.slide.sub,
       sort_order: data.sortOrder ?? 0,
       is_active: true,
-    });
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "id" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
@@ -292,7 +302,8 @@ export const saveSettingsRecord = createServerFn({ method: "POST" })
       contact: data.settings.contact,
       footer_tagline: data.settings.footerTagline,
       socials: data.settings.socials,
-    });
+      updated_at: new Date().toISOString(),
+    }, { onConflict: "key" });
     if (error) throw new Error(error.message);
     return { ok: true };
   });
