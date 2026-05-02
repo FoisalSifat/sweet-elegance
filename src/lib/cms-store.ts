@@ -122,33 +122,6 @@ const defaultState: State = {
   orders: [],
 };
 
-function hasProductChangedFromDefault(product: Product) {
-  const original = defaultProducts.find((item) => item.slug === product.slug);
-  if (!original) return true;
-  return JSON.stringify(original) !== JSON.stringify(product);
-}
-
-function hasSlideChangedFromDefault(slide: HeroSlide) {
-  const original = defaultSlides.find((item) => item.id === slide.id);
-  if (!original) return true;
-  return JSON.stringify(original) !== JSON.stringify(slide);
-}
-
-function mergeProducts(primary: Product[], fallback: Product[]) {
-  const merged = [...primary];
-  fallback.forEach((product) => {
-    if (!merged.some((item) => item.slug === product.slug)) merged.push(product);
-  });
-  return merged;
-}
-
-function mergeSlides(primary: HeroSlide[], fallback: HeroSlide[]) {
-  const merged = [...primary];
-  fallback.forEach((slide) => {
-    if (!merged.some((item) => item.id === slide.id)) merged.push(slide);
-  });
-  return merged;
-}
 
 function mergeSettings(parsed: Partial<SiteSettings> | null | undefined): SiteSettings {
   return { ...defaultSettings, ...(parsed || {}) };
