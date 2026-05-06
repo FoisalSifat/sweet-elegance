@@ -11,7 +11,7 @@ export function AnnouncementBar() {
       <div className="relative overflow-hidden h-7">
         <div className="absolute inset-y-0 left-0 flex items-center whitespace-nowrap animate-marquee">
           {loop.map((m, idx) => (
-            <span key={idx} className="px-8 font-medium tracking-wide flex items-center gap-2">
+            <span key={idx} className="px-14 font-medium tracking-wide flex items-center gap-3">
               {m}
               <span className="opacity-40">•</span>
             </span>
