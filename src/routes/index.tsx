@@ -35,7 +35,17 @@ const sizes = [`6" Serves 8`, `8" Serves 12`, `10" Serves 20`];
 const bases = ["Tahitian Vanilla", "Rich Velvet Cocoa"];
 
 function Home() {
-  const { products, slides } = useCms();
+  const { products, slides, settings } = useCms();
+  const igUrl = settings.socials.instagram || "https://www.instagram.com/izpatisserieandcafe/";
+  const igHandle = (() => {
+    try {
+      const u = new URL(igUrl);
+      const h = u.pathname.replace(/\//g, "");
+      return h ? `@${h}` : "@izpatisserieandcafe";
+    } catch {
+      return "@izpatisserieandcafe";
+    }
+  })();
   const [active, setActive] = useState(0);
   useEffect(() => {
     if (slides.length <= 1) return;
