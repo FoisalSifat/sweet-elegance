@@ -363,10 +363,10 @@ function Home() {
         <div className="flex items-end justify-between mb-6">
           <div>
             <p className="text-[11px] tracking-[0.28em] uppercase text-cocoa/60 mb-1">Follow Us</p>
-            <h2 className="font-serif text-2xl sm:text-3xl text-cocoa">@izpatisserieandcafe</h2>
+            <h2 className="font-serif text-2xl sm:text-3xl text-cocoa">{igHandle}</h2>
           </div>
           <a
-            href="https://www.instagram.com/izpatisserieandcafe/"
+            href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs sm:text-sm text-cocoa/70 hover:text-cocoa transition tracking-wide"
@@ -378,7 +378,7 @@ function Home() {
           {[izCroissant, izCremeBrulee, izPecanTart, izLatte].map((img, i) => (
             <a
               key={i}
-              href="https://www.instagram.com/izpatisserieandcafe/"
+              href={igUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="relative aspect-square rounded-2xl overflow-hidden group bg-muted"
