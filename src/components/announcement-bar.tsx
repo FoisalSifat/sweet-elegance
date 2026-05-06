@@ -1,30 +1,22 @@
-import { useEffect, useState } from "react";
 import { useCms } from "@/lib/cms-store";
 
 export function AnnouncementBar() {
   const { settings } = useCms();
   const messages = settings.announcements.length > 0 ? settings.announcements : [""];
-  const [i, setI] = useState(0);
-  useEffect(() => {
-    if (messages.length <= 1) return;
-    const t = setInterval(() => setI((p) => (p + 1) % messages.length), 3500);
-    return () => clearInterval(t);
-  }, [messages.length]);
+  // Repeat enough times for seamless marquee
+  const loop = [...messages, ...messages, ...messages, ...messages];
+
   return (
-    <div className="bg-cocoa text-cocoa-foreground text-xs sm:text-sm">
-      <div className="container mx-auto px-4 py-2.5 text-center font-medium tracking-wide overflow-hidden h-9 relative">
-        {messages.map((m, idx) => (
-          <div
-            key={`${idx}-${m}`}
-            className="absolute inset-0 flex items-center justify-center transition-all duration-700"
-            style={{
-              opacity: i === idx ? 1 : 0,
-              transform: `translateY(${i === idx ? 0 : 12}px)`,
-            }}
-          >
-            {m}
-          </div>
-        ))}
+    <div className="bg-cocoa text-cocoa-foreground text-[11px] sm:text-xs">
+      <div className="relative overflow-hidden h-7">
+        <div className="absolute inset-y-0 left-0 flex items-center whitespace-nowrap animate-marquee">
+          {loop.map((m, idx) => (
+            <span key={idx} className="px-8 font-medium tracking-wide flex items-center gap-2">
+              {m}
+              <span className="opacity-40">•</span>
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
