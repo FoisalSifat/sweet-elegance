@@ -35,7 +35,17 @@ const sizes = [`6" Serves 8`, `8" Serves 12`, `10" Serves 20`];
 const bases = ["Tahitian Vanilla", "Rich Velvet Cocoa"];
 
 function Home() {
-  const { products, slides } = useCms();
+  const { products, slides, settings } = useCms();
+  const igUrl = settings.socials.instagram || "https://www.instagram.com/izpatisserieandcafe/";
+  const igHandle = (() => {
+    try {
+      const u = new URL(igUrl);
+      const h = u.pathname.replace(/\//g, "");
+      return h ? `@${h}` : "@izpatisserieandcafe";
+    } catch {
+      return "@izpatisserieandcafe";
+    }
+  })();
   const [active, setActive] = useState(0);
   useEffect(() => {
     if (slides.length <= 1) return;
@@ -353,10 +363,10 @@ function Home() {
         <div className="flex items-end justify-between mb-6">
           <div>
             <p className="text-[11px] tracking-[0.28em] uppercase text-cocoa/60 mb-1">Follow Us</p>
-            <h2 className="font-serif text-2xl sm:text-3xl text-cocoa">@izpatisserieandcafe</h2>
+            <h2 className="font-serif text-2xl sm:text-3xl text-cocoa">{igHandle}</h2>
           </div>
           <a
-            href="https://www.instagram.com/izpatisserieandcafe/"
+            href={igUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs sm:text-sm text-cocoa/70 hover:text-cocoa transition tracking-wide"
@@ -368,7 +378,7 @@ function Home() {
           {[izCroissant, izCremeBrulee, izPecanTart, izLatte].map((img, i) => (
             <a
               key={i}
-              href="https://www.instagram.com/izpatisserieandcafe/"
+              href={igUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="relative aspect-square rounded-2xl overflow-hidden group bg-muted"
