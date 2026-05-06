@@ -168,7 +168,7 @@
     100% { transform: translateX(0%); }
   }
   .animate-marquee {
-    animation: marquee-ltr 40s linear infinite;
+    animation: marquee-ltr 70s linear infinite;
     will-change: transform;
   }
 }
