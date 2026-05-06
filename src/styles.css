@@ -162,4 +162,13 @@
   .bg-gradient-blush { background-image: var(--gradient-blush); }
   .bg-gradient-cream { background-image: var(--gradient-cream); }
   .bg-gradient-overlay { background-image: var(--gradient-overlay); }
+
+  @keyframes marquee-ltr {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0%); }
+  }
+  .animate-marquee {
+    animation: marquee-ltr 40s linear infinite;
+    will-change: transform;
+  }
 }
