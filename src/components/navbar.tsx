@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cartStore, useCart } from "@/lib/cart-store";
+import { AnnouncementBar } from "@/components/announcement-bar";
 import izLogo from "@/assets/iz-logo.webp";
 
 const links = [
@@ -33,6 +34,7 @@ export function Navbar() {
           : "bg-background/0 border-b border-transparent"
       }`}
     >
+      <AnnouncementBar />
       <div
         className={`container mx-auto px-4 sm:px-6 flex items-center justify-between transition-[height] duration-500 ease-out ${
           scrolled ? "h-16 sm:h-20 lg:h-24" : "h-20 sm:h-24 lg:h-28"
