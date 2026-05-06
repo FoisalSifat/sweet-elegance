@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cartStore, useCart } from "@/lib/cart-store";
+import { AnnouncementBar } from "@/components/announcement-bar";
 import izLogo from "@/assets/iz-logo.webp";
 
 const links = [
