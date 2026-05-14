@@ -95,7 +95,7 @@ function ProductPage() {
             </span>
           )}
           <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-2">{product.category}</p>
-          <h1 className="font-serif text-4xl sm:text-5xl text-cocoa leading-tight">{product.name}</h1>
+          <h1 className="font-serif text-3xl xs:text-4xl sm:text-5xl text-cocoa leading-tight">{product.name}</h1>
           <p className="text-2xl text-cocoa mt-4 font-medium">৳{product.price.toLocaleString()}</p>
           <p className="mt-6 text-foreground/70 leading-relaxed">{product.description}</p>
 

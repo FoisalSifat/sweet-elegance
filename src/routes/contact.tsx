@@ -29,7 +29,7 @@ function Contact() {
       <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24">
         <div className="text-center max-w-2xl mx-auto mb-16">
           <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4">Say hello</p>
-          <h1 className="font-serif text-5xl sm:text-6xl text-cocoa leading-[1.05]">We'd love to hear from you</h1>
+          <h1 className="font-serif text-4xl xs:text-5xl sm:text-6xl text-cocoa leading-[1.05]">We'd love to hear from you</h1>
           <p className="mt-5 text-foreground/70">Questions, custom orders, or just to say hi — we read every message.</p>
         </div>
 

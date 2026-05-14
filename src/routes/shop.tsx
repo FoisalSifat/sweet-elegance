@@ -29,7 +29,7 @@ function Shop() {
       <Navbar />
       <section className="container mx-auto px-4 sm:px-6 pt-12 pb-8 sm:pt-20">
         <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4">The Collection</p>
-        <h1 className="font-serif text-5xl sm:text-6xl text-cocoa max-w-2xl leading-[1.05]">
+        <h1 className="font-serif text-4xl xs:text-5xl sm:text-6xl text-cocoa max-w-2xl leading-[1.05]">
           Coffee, desserts and café favourites.
         </h1>
         <p className="mt-5 text-foreground/70 max-w-xl">
