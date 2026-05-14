@@ -31,8 +31,6 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const sizes = [`6" Serves 8`, `8" Serves 12`, `10" Serves 20`];
-const bases = ["Tahitian Vanilla", "Rich Velvet Cocoa"];
 
 function Home() {
   const { products, slides, settings } = useCms();
