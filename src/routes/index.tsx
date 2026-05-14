@@ -64,8 +64,6 @@ function Home() {
     el.scrollBy({ left: dir * Math.min(el.clientWidth * 0.85, 720), behavior: "smooth" });
   };
 
-  const [size, setSize] = useState(sizes[0]);
-  const [base, setBase] = useState(bases[0]);
 
   return (
     <div className="min-h-screen bg-background">
