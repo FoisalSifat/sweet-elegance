@@ -22,7 +22,7 @@ function About() {
       <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24 grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
         <div>
           <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4">Our Story</p>
-          <h1 className="font-serif text-5xl sm:text-6xl text-cocoa leading-[1.05] mb-6">
+          <h1 className="font-serif text-4xl xs:text-5xl sm:text-6xl text-cocoa leading-[1.05] mb-6">
             A love letter, baked daily.
           </h1>
           <div className="space-y-5 text-foreground/75 leading-relaxed">

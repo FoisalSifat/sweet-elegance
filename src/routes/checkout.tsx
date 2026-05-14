@@ -76,7 +76,7 @@ function CheckoutPage() {
       </div>
 
       <section className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <h1 className="font-serif text-4xl sm:text-5xl text-cocoa mb-10">Checkout</h1>
+        <h1 className="font-serif text-3xl xs:text-4xl sm:text-5xl text-cocoa mb-8 sm:mb-10">Checkout</h1>
 
         {cart.items.length === 0 ? (
           <div className="text-center py-20">
@@ -86,7 +86,7 @@ function CheckoutPage() {
             </Link>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-[1fr_400px] gap-10 lg:gap-14">
+          <div className="grid lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_400px] gap-8 lg:gap-12 xl:gap-14">
             <form onSubmit={onSubmit} className="space-y-8">
               <div>
                 <h2 className="font-serif text-xl text-cocoa mb-4">Contact</h2>

@@ -38,13 +38,13 @@ function CustomCake() {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      <section className="relative h-[50vh] min-h-[380px] overflow-hidden">
+      <section className="relative h-[44vh] xs:h-[50vh] min-h-[320px] sm:min-h-[380px] overflow-hidden">
         <img src={customBg} alt="Custom cakes" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-cocoa/70 via-cocoa/20 to-transparent" />
-        <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-end pb-12">
+        <div className="relative h-full container mx-auto px-4 sm:px-6 flex items-end pb-8 sm:pb-12">
           <div className="text-cream max-w-2xl">
-            <p className="text-xs tracking-[0.3em] uppercase mb-4 opacity-90">Custom Orders</p>
-            <h1 className="font-serif text-5xl sm:text-6xl leading-[1.05]">Design your dream cake 🎂</h1>
+            <p className="text-[10px] xs:text-xs tracking-[0.3em] uppercase mb-3 sm:mb-4 opacity-90">Custom Orders</p>
+            <h1 className="font-serif text-3xl xs:text-4xl sm:text-5xl lg:text-6xl leading-[1.05]">Design your dream cake 🎂</h1>
           </div>
         </div>
       </section>
