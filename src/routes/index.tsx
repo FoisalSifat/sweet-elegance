@@ -12,7 +12,7 @@ import izCroissant from "@/assets/iz-croissant.jpg";
 import izCremeBrulee from "@/assets/iz-cremebrulee.jpg";
 import izLatte from "@/assets/iz-latte.jpg";
 import izPecanTart from "@/assets/iz-pecantart.jpg";
-import customBg from "@/assets/custom-cake-bg.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -31,8 +31,6 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-const sizes = [`6" Serves 8`, `8" Serves 12`, `10" Serves 20`];
-const bases = ["Tahitian Vanilla", "Rich Velvet Cocoa"];
 
 function Home() {
   const { products, slides, settings } = useCms();
@@ -64,8 +62,6 @@ function Home() {
     el.scrollBy({ left: dir * Math.min(el.clientWidth * 0.85, 720), behavior: "smooth" });
   };
 
-  const [size, setSize] = useState(sizes[0]);
-  const [base, setBase] = useState(bases[0]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -224,85 +220,6 @@ function Home() {
                 <ProductCard product={p} />
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CUSTOM CAKE — inline builder card */}
-      <section className="container mx-auto px-4 sm:px-6 py-16 sm:py-24">
-        <div className="grid md:grid-cols-2 rounded-[2rem] overflow-hidden shadow-elegant min-h-[460px] bg-card border border-border">
-          <div className="p-8 sm:p-12 lg:p-14 flex flex-col justify-center">
-            <h2 className="font-serif text-3xl sm:text-5xl text-cocoa leading-[1.05] mb-4">
-              Build Your<br />Perfect Slice
-            </h2>
-            <p className="text-foreground/70 leading-relaxed mb-8 max-w-md text-sm sm:text-base">
-              Tailor every detail from the sponge to the secret fillings.
-              Our bakers bring your vision to life.
-            </p>
-
-            <div className="space-y-5">
-              <div>
-                <p className="text-[11px] tracking-[0.2em] uppercase text-cocoa/70 mb-2.5">
-                  1. Select Size
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {sizes.map((s) => (
-                    <button
-                      key={s}
-                      onClick={() => setSize(s)}
-                      className={`px-4 py-2 rounded-full text-xs sm:text-sm border transition-all ${
-                        size === s
-                          ? "bg-cocoa text-cocoa-foreground border-cocoa"
-                          : "bg-background border-cocoa/15 text-cocoa hover:border-cocoa/40"
-                      }`}
-                    >
-                      {s}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <p className="text-[11px] tracking-[0.2em] uppercase text-cocoa/70 mb-2.5">
-                  2. Choose Base
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {bases.map((b) => (
-                    <button
-                      key={b}
-                      onClick={() => setBase(b)}
-                      className={`px-4 py-2 rounded-full text-xs sm:text-sm border inline-flex items-center gap-2 transition-all ${
-                        base === b
-                          ? "bg-cocoa text-cocoa-foreground border-cocoa"
-                          : "bg-background border-cocoa/15 text-cocoa hover:border-cocoa/40"
-                      }`}
-                    >
-                      <span
-                        className={`w-2 h-2 rounded-full ${
-                          base === b ? "bg-cream" : "bg-cocoa/30"
-                        }`}
-                      />
-                      {b}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <Link
-              to="/custom-cake"
-              className="mt-8 inline-flex w-fit items-center gap-2 bg-cocoa text-cocoa-foreground px-7 py-3.5 rounded-full text-sm font-medium hover:opacity-90 transition"
-            >
-              Start Designing Your Cake
-            </Link>
-          </div>
-          <div className="relative min-h-[280px] md:min-h-full">
-            <img
-              src={customBg}
-              alt="Custom cake on marble stand"
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="lazy"
-            />
           </div>
         </div>
       </section>
