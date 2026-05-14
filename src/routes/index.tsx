@@ -12,7 +12,7 @@ import izCroissant from "@/assets/iz-croissant.jpg";
 import izCremeBrulee from "@/assets/iz-cremebrulee.jpg";
 import izLatte from "@/assets/iz-latte.jpg";
 import izPecanTart from "@/assets/iz-pecantart.jpg";
-import customBg from "@/assets/custom-cake-bg.jpg";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
