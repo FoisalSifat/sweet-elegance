@@ -72,7 +72,7 @@ function Home() {
       <Navbar />
 
       {/* HERO SLIDER */}
-      <section className="relative h-[64vh] min-h-[440px] max-h-[680px] overflow-hidden mx-3 sm:mx-6 mt-3 sm:mt-4 rounded-3xl">
+      <section className="relative h-[60vh] xs:h-[64vh] min-h-[420px] sm:min-h-[480px] max-h-[680px] overflow-hidden mx-2 xs:mx-3 sm:mx-6 mt-2 xs:mt-3 sm:mt-4 rounded-2xl sm:rounded-3xl">
         {slides.map((s, i) => (
           <div
             key={i}
@@ -105,8 +105,8 @@ function Home() {
           </div>
         ))}
 
-        <div className="relative h-full px-6 sm:px-10 lg:px-14 flex items-end sm:items-center pb-10 sm:pb-0">
-          <div className="max-w-md text-cocoa-foreground">
+        <div className="relative h-full px-4 xs:px-6 sm:px-10 lg:px-14 flex items-end sm:items-center pb-8 xs:pb-10 sm:pb-0">
+          <div className="max-w-[88%] xs:max-w-md text-cocoa-foreground">
             <p
               key={`eyebrow-${active}`}
               className="text-[10px] tracking-[0.32em] uppercase mb-3 opacity-90 animate-[fade-up_0.6s_ease-out]"
@@ -115,7 +115,7 @@ function Home() {
             </p>
             <h1
               key={`title-${active}`}
-              className="font-serif text-2xl sm:text-4xl lg:text-5xl leading-[1.05] whitespace-pre-line animate-[fade-up_0.7s_ease-out]"
+              className="font-serif text-[1.6rem] xs:text-3xl sm:text-4xl lg:text-5xl leading-[1.05] whitespace-pre-line animate-[fade-up_0.7s_ease-out]"
             >
               {slides[active].title}
             </h1>
