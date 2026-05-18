@@ -6,9 +6,8 @@ import { AnnouncementBar } from "@/components/announcement-bar";
 import izLogo from "@/assets/iz-logo.webp";
 
 const links = [
+  { to: "/", label: "Home" },
   { to: "/shop", label: "Shop" },
-  { to: "/shop", label: "Cakes", search: { category: "Cakes" } },
-  
   { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ] as const;
