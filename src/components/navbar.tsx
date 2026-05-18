@@ -35,10 +35,10 @@ export function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-[background-color,box-shadow,border-color,transform] duration-500 ease-out ${
+      className={`sticky top-0 z-40 bg-background/95 backdrop-blur-md transition-[box-shadow,border-color] duration-300 ease-out ${
         scrolled
-          ? "bg-background border-b border-border shadow-[0_18px_45px_-30px_var(--cocoa)]"
-          : "bg-background/0 border-b border-transparent"
+          ? "border-b border-border shadow-[0_18px_45px_-30px_var(--cocoa)]"
+          : "border-b border-border/40"
       }`}
     >
       <AnnouncementBar />
