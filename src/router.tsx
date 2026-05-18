@@ -54,6 +54,14 @@ function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => vo
   );
 }
 
+function DefaultPendingComponent() {
+  return (
+    <div className="fixed top-0 left-0 right-0 z-[100] h-0.5 overflow-hidden bg-transparent">
+      <div className="h-full w-1/3 bg-cocoa animate-[loading-bar_1s_ease-in-out_infinite]" />
+    </div>
+  );
+}
+
 export const getRouter = () => {
   const router = createRouter({
     routeTree,
@@ -61,8 +69,9 @@ export const getRouter = () => {
     scrollRestoration: true,
     defaultPreload: "intent",
     defaultPreloadStaleTime: 0,
-    defaultPendingMs: 0,
+    defaultPendingMs: 80,
     defaultPendingMinMs: 0,
+    defaultPendingComponent: DefaultPendingComponent,
     defaultErrorComponent: DefaultErrorComponent,
   });
 
