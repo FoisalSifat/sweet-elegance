@@ -7,7 +7,7 @@ import {
   Settings as SettingsIcon,
   ShoppingCart,
   LogOut,
-  
+  Home,
   Lock,
   Eye,
   EyeOff,
