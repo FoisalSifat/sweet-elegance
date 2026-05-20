@@ -295,10 +295,15 @@ function ProductDrawer({
             </Field>
             <Field label="Price (৳)">
               <input
-                type="number"
-                min={0}
-                value={draft.price}
-                onChange={(e) => update("price", Number(e.target.value))}
+                type="text"
+                inputMode="decimal"
+                pattern="[0-9]*\.?[0-9]*"
+                value={draft.price === 0 ? "" : String(draft.price)}
+                onChange={(e) => {
+                  const v = e.target.value.replace(/[^0-9.]/g, "");
+                  update("price", v === "" ? 0 : Number(v));
+                }}
+                placeholder="0"
                 className={inputCls}
                 required
               />
