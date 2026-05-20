@@ -56,9 +56,24 @@ function DefaultErrorComponent({ error, reset }: { error: Error; reset: () => vo
 
 function DefaultPendingComponent() {
   return (
-    <div className="fixed top-0 left-0 right-0 z-[100] h-0.5 overflow-hidden bg-transparent">
-      <div className="h-full w-1/3 bg-cocoa animate-[loading-bar_1s_ease-in-out_infinite]" />
-    </div>
+    <>
+      <div className="fixed top-0 left-0 right-0 z-[100] h-0.5 overflow-hidden bg-transparent">
+        <div className="h-full w-1/3 bg-cocoa animate-[loading-bar_1s_ease-in-out_infinite]" />
+      </div>
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 animate-fade-in">
+        <div className="skeleton h-8 w-2/3 sm:w-1/3 mb-4" />
+        <div className="skeleton h-4 w-full max-w-md mb-10" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="space-y-3">
+              <div className="skeleton aspect-[4/5] w-full" />
+              <div className="skeleton h-4 w-3/4" />
+              <div className="skeleton h-4 w-1/3" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
 
