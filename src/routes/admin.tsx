@@ -7,7 +7,7 @@ import {
   Settings as SettingsIcon,
   ShoppingCart,
   LogOut,
-  
+  Home,
   Lock,
   Eye,
   EyeOff,
@@ -198,6 +198,12 @@ function AdminLayout() {
         </nav>
 
         <div className="px-3 pb-5 space-y-1 border-t border-cocoa-foreground/10 pt-4">
+          <Link
+            to="/"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-cocoa-foreground/10"
+          >
+            <Home className="w-4 h-4" /> Back to home
+          </Link>
           <button
             onClick={() => adminAuth.logout()}
             className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm hover:bg-cocoa-foreground/10"
