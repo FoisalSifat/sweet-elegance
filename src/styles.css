@@ -178,4 +178,20 @@
     0%   { transform: translateX(-100%); }
     100% { transform: translateX(400%); }
   }
+
+  @keyframes shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+  }
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--cocoa) 8%, transparent) 0%,
+      color-mix(in oklab, var(--cocoa) 14%, transparent) 50%,
+      color-mix(in oklab, var(--cocoa) 8%, transparent) 100%
+    );
+    background-size: 800px 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+    border-radius: 0.75rem;
+  }
 }
