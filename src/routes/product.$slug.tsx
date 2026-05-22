@@ -182,9 +182,9 @@ function ProductPage() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 sm:px-6 py-20">
-        <h2 className="font-serif text-3xl sm:text-4xl text-cocoa mb-10">You may also love</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-8">
+      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-20">
+        <h2 className="font-serif text-2xl xs:text-3xl sm:text-4xl text-cocoa mb-6 sm:mb-10">You may also love</h2>
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 xs:gap-5 sm:gap-8">
           {related.map((p) => (
             <ProductCard key={p.slug} product={p} />
           ))}
