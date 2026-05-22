@@ -43,19 +43,19 @@ export function Navbar() {
     >
       <AnnouncementBar />
       <div
-        className={`container mx-auto px-4 sm:px-6 flex items-center justify-between transition-[height] duration-500 ease-out ${
-          scrolled ? "h-16 sm:h-20 lg:h-24" : "h-20 sm:h-24 lg:h-28"
+        className={`container mx-auto px-3 xs:px-4 sm:px-6 flex items-center justify-between gap-2 transition-[height] duration-500 ease-out ${
+          scrolled ? "h-14 xs:h-16 sm:h-20 lg:h-24" : "h-16 xs:h-20 sm:h-24 lg:h-28"
         }`}
       >
         <button
-          className="md:hidden p-2 -ml-2 text-cocoa"
+          className="md:hidden p-1.5 -ml-1.5 text-cocoa shrink-0"
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <Link to="/" className="flex items-center group" aria-label="IZ Patisserie & Cafe — Home">
+        <Link to="/" className="flex items-center group min-w-0" aria-label="IZ Patisserie & Cafe — Home">
           <img
             src={izLogo}
             alt="IZ Patisserie & Cafe"
@@ -64,8 +64,8 @@ export function Navbar() {
             loading="eager"
             fetchPriority="high"
             decoding="async"
-            className={`w-auto max-w-[210px] sm:max-w-[260px] object-contain transition-[height,transform,filter] duration-500 ease-out group-hover:scale-[1.02] ${
-              scrolled ? "h-12 sm:h-16 lg:h-20" : "h-16 sm:h-20 lg:h-24"
+            className={`w-auto max-w-[140px] xs:max-w-[190px] sm:max-w-[260px] object-contain transition-[height,transform,filter] duration-500 ease-out group-hover:scale-[1.02] ${
+              scrolled ? "h-10 xs:h-12 sm:h-16 lg:h-20" : "h-12 xs:h-16 sm:h-20 lg:h-24"
             }`}
           />
         </Link>
@@ -82,19 +82,19 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          <button className="p-2 hover:text-cocoa transition" aria-label="Search">
-            <Search className="w-5 h-5" />
+        <div className="flex items-center gap-0.5 xs:gap-1 sm:gap-2 shrink-0">
+          <button className="p-1.5 xs:p-2 hover:text-cocoa transition" aria-label="Search">
+            <Search className="w-4 h-4 xs:w-5 xs:h-5" />
           </button>
           <button className="p-2 hover:text-cocoa transition hidden sm:inline-flex" aria-label="Account">
             <User className="w-5 h-5" />
           </button>
           <button
             onClick={() => cartStore.setOpen(true)}
-            className="p-2 hover:text-cocoa transition relative"
+            className="p-1.5 xs:p-2 hover:text-cocoa transition relative"
             aria-label="Cart"
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-4 h-4 xs:w-5 xs:h-5" />
             {totalQty > 0 && (
               <span className="absolute -top-0.5 -right-0.5 bg-cocoa text-cocoa-foreground text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
                 {totalQty}

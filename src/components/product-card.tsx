@@ -57,23 +57,23 @@ export function ProductCard({ product }: { product: Product }) {
           </span>
         )}
       </div>
-      <div className="p-4 sm:p-5">
-        <h3 className="font-serif text-base sm:text-lg text-cocoa leading-tight line-clamp-1">
+      <div className="p-3 xs:p-4 sm:p-5">
+        <h3 className="font-serif text-sm xs:text-base sm:text-lg text-cocoa leading-tight line-clamp-1">
           {product.name}
         </h3>
-        <p className="text-xs text-muted-foreground mt-1 line-clamp-1">
+        <p className="text-[11px] xs:text-xs text-muted-foreground mt-1 line-clamp-1">
           {product.description.split(".")[0]}.
         </p>
-        <div className="mt-4 flex items-center justify-between">
+        <div className="mt-3 xs:mt-4 flex items-center justify-between gap-2">
           <span className="font-medium text-cocoa text-sm sm:text-base">
             ৳{product.price.toLocaleString()}
           </span>
           <button
             onClick={quickAdd}
             aria-label="Add to cart"
-            className="w-9 h-9 rounded-full bg-blush/60 hover:bg-cocoa hover:text-cocoa-foreground text-cocoa flex items-center justify-center transition-all active:scale-90"
+            className="w-8 h-8 xs:w-9 xs:h-9 shrink-0 rounded-full bg-blush/60 hover:bg-cocoa hover:text-cocoa-foreground text-cocoa flex items-center justify-center transition-all active:scale-90"
           >
-            <ShoppingBag className="w-4 h-4" />
+            <ShoppingBag className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
           </button>
         </div>
       </div>
