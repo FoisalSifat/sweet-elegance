@@ -71,16 +71,16 @@ function ProductPage() {
         </Link>
       </div>
 
-      <section className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 grid lg:grid-cols-2 gap-10 lg:gap-20">
-        <div className="space-y-4">
-          <div className="aspect-square rounded-3xl overflow-hidden bg-muted shadow-soft">
+      <section className="container mx-auto px-4 sm:px-6 py-6 sm:py-12 grid lg:grid-cols-2 gap-8 lg:gap-20">
+        <div className="space-y-3 sm:space-y-4">
+          <div className="aspect-square rounded-2xl sm:rounded-3xl overflow-hidden bg-muted shadow-soft">
             <img src={product.image} alt={product.name} loading="eager" decoding="async" fetchPriority="high" className="w-full h-full object-cover" />
           </div>
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 gap-2 sm:gap-3">
             {[product.image, product.image, product.image, product.image].map((img, i) => (
               <button
                 key={i}
-                className="aspect-square rounded-2xl overflow-hidden bg-muted border border-border hover:border-cocoa transition"
+                className="aspect-square rounded-xl sm:rounded-2xl overflow-hidden bg-muted border border-border hover:border-cocoa transition"
               >
                 <img src={img} alt="" className="w-full h-full object-cover" loading="lazy" />
               </button>
@@ -90,14 +90,14 @@ function ProductPage() {
 
         <div className="lg:py-6">
           {product.tag && (
-            <span className="inline-block bg-blush text-cocoa text-[11px] font-medium tracking-wide px-3 py-1.5 rounded-full mb-4">
+            <span className="inline-block bg-blush text-cocoa text-[11px] font-medium tracking-wide px-3 py-1.5 rounded-full mb-3 sm:mb-4">
               {product.tag}
             </span>
           )}
-          <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-2">{product.category}</p>
-          <h1 className="font-serif text-3xl xs:text-4xl sm:text-5xl text-cocoa leading-tight">{product.name}</h1>
-          <p className="text-2xl text-cocoa mt-4 font-medium">৳{product.price.toLocaleString()}</p>
-          <p className="mt-6 text-foreground/70 leading-relaxed">{product.description}</p>
+          <p className="text-[11px] xs:text-xs tracking-[0.3em] uppercase text-rose-gold mb-2">{product.category}</p>
+          <h1 className="font-serif text-2xl xs:text-3xl sm:text-4xl lg:text-5xl text-cocoa leading-tight">{product.name}</h1>
+          <p className="text-xl xs:text-2xl text-cocoa mt-3 sm:mt-4 font-medium">৳{product.price.toLocaleString()}</p>
+          <p className="mt-4 sm:mt-6 text-sm sm:text-base text-foreground/70 leading-relaxed">{product.description}</p>
 
           <div className="mt-8 space-y-6">
             <div>
