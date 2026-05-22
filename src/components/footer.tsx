@@ -66,11 +66,11 @@ export function Footer() {
           <p className="text-sm text-foreground/70 mb-4 leading-relaxed">
             Join our mailing list for secret drops and seasonal previews.
           </p>
-          <form className="flex gap-2">
+          <form className="flex gap-2 min-w-0">
             <input
               type="email"
               placeholder="Email Address"
-              className="flex-1 bg-card border border-cocoa/15 rounded-full px-4 py-2.5 text-sm placeholder:text-foreground/40 focus:outline-none focus:border-cocoa/50"
+              className="flex-1 min-w-0 bg-card border border-cocoa/15 rounded-full px-3 sm:px-4 py-2.5 text-sm placeholder:text-foreground/40 focus:outline-none focus:border-cocoa/50"
             />
             <button
               aria-label="Subscribe"
