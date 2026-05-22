@@ -82,19 +82,19 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          <button className="p-2 hover:text-cocoa transition" aria-label="Search">
-            <Search className="w-5 h-5" />
+        <div className="flex items-center gap-0.5 xs:gap-1 sm:gap-2 shrink-0">
+          <button className="p-1.5 xs:p-2 hover:text-cocoa transition" aria-label="Search">
+            <Search className="w-4 h-4 xs:w-5 xs:h-5" />
           </button>
           <button className="p-2 hover:text-cocoa transition hidden sm:inline-flex" aria-label="Account">
             <User className="w-5 h-5" />
           </button>
           <button
             onClick={() => cartStore.setOpen(true)}
-            className="p-2 hover:text-cocoa transition relative"
+            className="p-1.5 xs:p-2 hover:text-cocoa transition relative"
             aria-label="Cart"
           >
-            <ShoppingBag className="w-5 h-5" />
+            <ShoppingBag className="w-4 h-4 xs:w-5 xs:h-5" />
             {totalQty > 0 && (
               <span className="absolute -top-0.5 -right-0.5 bg-cocoa text-cocoa-foreground text-[10px] font-medium w-4 h-4 rounded-full flex items-center justify-center">
                 {totalQty}
