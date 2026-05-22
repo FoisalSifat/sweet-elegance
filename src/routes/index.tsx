@@ -68,7 +68,7 @@ function Home() {
       <Navbar />
 
       {/* HERO SLIDER */}
-      <section className="relative h-[60vh] xs:h-[64vh] min-h-[420px] sm:min-h-[480px] max-h-[680px] overflow-hidden mx-2 xs:mx-3 sm:mx-6 mt-2 xs:mt-3 sm:mt-4 rounded-2xl sm:rounded-3xl">
+      <section className="relative h-[58vh] xs:h-[62vh] sm:h-[64vh] min-h-[380px] xs:min-h-[440px] sm:min-h-[480px] max-h-[680px] overflow-hidden mx-2 xs:mx-3 sm:mx-6 mt-2 xs:mt-3 sm:mt-4 rounded-2xl sm:rounded-3xl">
         {slides.map((s, i) => (
           <div
             key={i}
