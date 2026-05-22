@@ -107,7 +107,7 @@ function ProductPage() {
                   <button
                     key={s}
                     onClick={() => setSize(s)}
-                    className={`px-5 py-2.5 rounded-full text-sm transition ${
+                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm transition ${
                       size === s
                         ? "bg-cocoa text-cocoa-foreground"
                         : "border border-border hover:border-cocoa"
@@ -126,7 +126,7 @@ function ProductPage() {
                   <button
                     key={f}
                     onClick={() => setFlavor(f)}
-                    className={`px-5 py-2.5 rounded-full text-sm transition ${
+                    className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm transition ${
                       flavor === f
                         ? "bg-cocoa text-cocoa-foreground"
                         : "border border-border hover:border-cocoa"
