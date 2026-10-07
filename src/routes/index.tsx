@@ -244,7 +244,7 @@ function Home() {
               text: "The cake was soft and not overly sweet, which I really liked. A lovely little treat with coffee — I'd happily have it again.",
             },
             {
-              name: "সাবরিননা আফরিন",
+              name: "সাবরিনা আফরিন",
               role: "Celebration cake",
               text: "The cake looked lovely on the table, and the flavour was just as good. Everyone wanted another slice. A nice choice for a small celebration.",
             },
