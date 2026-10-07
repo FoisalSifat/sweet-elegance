@@ -249,7 +249,7 @@ function Home() {
               text: "The cake looked lovely on the table, and the flavour was just as good. Everyone wanted another slice. A nice choice for a small celebration.",
             },
             {
-              name: "নুসরাত জা�হান",
+              name: "নুসরাত জাহান",
               role: "Macaron gift box",
               text: "Such a pretty box to give as a gift. The macarons had a nice crisp shell and a soft centre. I'd pick these up again for a friend.",
             },
