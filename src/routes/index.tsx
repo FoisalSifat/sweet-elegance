@@ -239,17 +239,17 @@ function Home() {
         <div className="grid md:grid-cols-3 gap-5">
           {[
             {
-              name: "তানিয়া রহমান",
+              name: "Tanvia Rahman",
               role: "Cake & coffee",
               text: "The cake was soft and not overly sweet, which I really liked. A lovely little treat with coffee — I'd happily have it again.",
             },
             {
-              name: "সাবরিনা আফরিন",
+              name: "Sabrina Afrin",
               role: "Celebration cake",
               text: "The cake looked lovely on the table, and the flavour was just as good. Everyone wanted another slice. A nice choice for a small celebration.",
             },
             {
-              name: "নুসরাত জাহান",
+              name: "Nusrat Jahan",
               role: "Macaron gift box",
               text: "Such a pretty box to give as a gift. The macarons had a nice crisp shell and a soft centre. I'd pick these up again for a friend.",
             },
