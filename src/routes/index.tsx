@@ -25,7 +25,8 @@ export const Route = createFileRoute("/")({
       },
       { property: "og:title", content: "IZ Patisserie & Cafe — Luxury Desserts" },
       { property: "og:description", content: "Hand-crafted cakes, brownies, macarons and gift boxes." },
-      { property: "og:image", content: heroCake },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Home,
@@ -225,7 +226,7 @@ function Home() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="container mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
+      <section className="container mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-16 sm:pb-24">
         <div className="text-center mb-10">
           <h2 className="font-serif text-3xl sm:text-4xl text-cocoa">A Sweet Impression</h2>
           <div className="flex justify-center gap-1 mt-3 text-rose-gold text-sm">
@@ -233,40 +234,47 @@ function Home() {
               <span key={k}>★</span>
             ))}
           </div>
+          <p className="mt-3 text-xs text-muted-foreground">Sample reviews · Not verified customer feedback</p>
         </div>
         <div className="grid md:grid-cols-3 gap-5">
           {[
             {
               name: "Eleanor Vance",
-              role: "Verified Order",
-              text: "The texture of the Silk Cake was unlike anything I've ever tasted. It truly felt like a luxury experience delivered to my door.",
+              role: "Cake & coffee",
+              text: "The cake was soft and not overly sweet, which I really liked. A lovely little treat with coffee — I'd happily have it again.",
             },
             {
               name: "Julian Wright",
-              role: "Custom Order",
-              text: "We ordered a custom wedding cake and IZ Patisserie exceeded every expectation. The design was breathtaking and the taste even better.",
+              role: "Celebration cake",
+              text: "The cake looked lovely on the table, and the flavour was just as good. Everyone wanted another slice. A nice choice for a small celebration.",
             },
             {
               name: "Sarah Jenkins",
-              role: "Gift Recipient",
-              text: "Perfect for gifts! The packaging is so elegant and the macarons stayed perfectly crisp. My go-to for client thank yous.",
+              role: "Macaron gift box",
+              text: "Such a pretty box to give as a gift. The macarons had a nice crisp shell and a soft centre. I'd pick these up again for a friend.",
             },
           ].map((t, i) => (
             <div
               key={i}
-              className="bg-card rounded-2xl p-7 border border-border/60 hover:shadow-soft transition-all"
+              className="flex flex-col bg-card rounded-lg p-5 sm:p-7 border border-border/60 shadow-soft"
             >
-              <p className="text-sm text-foreground/75 leading-relaxed mb-6 italic">
-                "{t.text}"
+              <div className="flex items-center justify-between gap-3 mb-5">
+                <div className="flex gap-1 text-rose-gold text-sm" aria-label="Sample rating: 5 out of 5 stars">
+                  {Array.from({ length: 5 }).map((_, k) => <span key={k} aria-hidden="true">★</span>)}
+                </div>
+                <span className="text-xs text-muted-foreground">{t.role}</span>
+              </div>
+              <p className="text-sm text-foreground/80 leading-relaxed mb-7 flex-1">
+                “{t.text}”
               </p>
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-blush/70 flex items-center justify-center font-serif text-cocoa text-sm">
-                  {t.name[0]}
+              <div className="flex items-center gap-3 border-t border-border/60 pt-4">
+                <div className="w-10 h-10 shrink-0 rounded-full bg-muted flex items-center justify-center text-cocoa text-xs font-medium">
+                  {t.name.split(" ").map((part) => part[0]).join("")}
                 </div>
                 <div className="text-xs">
                   <p className="font-medium text-cocoa text-sm">{t.name}</p>
-                  <p className="text-muted-foreground tracking-wider uppercase text-[10px] mt-0.5">
-                    {t.role}
+                  <p className="text-muted-foreground text-xs mt-0.5">
+                    Sample reviewer
                   </p>
                 </div>
               </div>
