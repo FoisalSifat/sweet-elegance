@@ -239,20 +239,12 @@ function Home() {
         <div className="grid md:grid-cols-3 gap-5">
           {[
             {
-              name: "Eleanor Vance",
-              role: "Cake & coffee",
-              text: "The cake was soft and not overly sweet, which I really liked. A lovely little treat with coffee — I'd happily have it again.",
+              name: "তানিয়া রহমান",
+              role: "কেক ও কফি",
+              text: "কেকটা নরম আর বেশি মিষ্টি না, এটা� সবচেয়ে ভালো লাগলো। কফির সাথে দারুণ একটা ট্�রীট — আবার নিয়ে ভাবছি।",
             },
             {
-              name: "Julian Wright",
-              role: "Celebration cake",
-              text: "The cake looked lovely on the table, and the flavour was just as good. Everyone wanted another slice. A nice choice for a small celebration.",
-            },
-            {
-              name: "Sarah Jenkins",
-              role: "Macaron gift box",
-              text: "Such a pretty box to give as a gift. The macarons had a nice crisp shell and a soft centre. I'd pick these up again for a friend.",
-            },
+              name:সে didn't…
           ].map((t, i) => (
             <div
               key={i}
