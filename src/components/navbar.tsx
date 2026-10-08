@@ -119,58 +119,63 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-0.5 xs:gap-1 sm:gap-2 shrink-0">
-          <div className="relative" ref={searchRef}>
-            <button
-              className="p-1.5 xs:p-2 hover:text-cocoa transition"
-              aria-label="Search"
-              aria-expanded={searchOpen}
-              onClick={() => setSearchOpen((v) => !v)}
+          <div className="relative flex items-center" ref={searchRef}>
+            <div
+              className={`flex items-center rounded-full border transition-all duration-300 ease-out ${
+                searchOpen
+                  ? "w-44 xs:w-56 sm:w-64 border-border bg-card shadow-sm pl-1 pr-3"
+                  : "w-7 xs:w-9 border-transparent hover:bg-accent/60"
+              }`}
             >
-              <Search className="w-4 h-4 xs:w-5 xs:h-5" />
-            </button>
-            {searchOpen && (
+              <button
+                className="p-1.5 xs:p-2 text-cocoa/80 hover:text-cocoa transition shrink-0"
+                aria-label="Search"
+                aria-expanded={searchOpen}
+                onClick={() => setSearchOpen((v) => !v)}
+              >
+                <Search className="w-4 h-4 xs:w-5 xs:h-5" />
+              </button>
+              {searchOpen && (
+                <input
+                  autoFocus
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search coffee, cakes..."
+                  className="w-full min-w-0 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                />
+              )}
+            </div>
+            {searchOpen && query.trim() && (
               <div className="absolute right-0 top-full mt-2 w-72 xs:w-80 rounded-xl border border-border bg-card shadow-elegant overflow-hidden animate-fade-up">
-                <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
-                  <Search className="w-4 h-4 text-muted-foreground shrink-0" />
-                  <input
-                    autoFocus
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    placeholder="Search coffee, cakes, desserts..."
-                    className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-                  />
+                <div className="max-h-72 overflow-y-auto">
+                  {results.length === 0 ? (
+                    <p className="px-4 py-6 text-sm text-muted-foreground text-center">
+                      No items found for “{query.trim()}”
+                    </p>
+                  ) : (
+                    results.map((p) => (
+                      <button
+                        key={p.slug}
+                        onClick={() => {
+                          setSearchOpen(false);
+                          setQuery("");
+                          navigate({ to: "/product/$slug", params: { slug: p.slug } });
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent/60 transition text-left"
+                      >
+                        <img
+                          src={p.image}
+                          alt=""
+                          className="w-10 h-10 rounded-lg object-cover shrink-0"
+                        />
+                        <span className="min-w-0">
+                          <span className="block text-sm text-foreground truncate">{p.name}</span>
+                          <span className="block text-xs text-muted-foreground">{p.category}</span>
+                        </span>
+                      </button>
+                    ))
+                  )}
                 </div>
-                {query.trim() && (
-                  <div className="max-h-72 overflow-y-auto">
-                    {results.length === 0 ? (
-                      <p className="px-4 py-6 text-sm text-muted-foreground text-center">
-                        No items found for “{query.trim()}”
-                      </p>
-                    ) : (
-                      results.map((p) => (
-                        <button
-                          key={p.slug}
-                          onClick={() => {
-                            setSearchOpen(false);
-                            setQuery("");
-                            navigate({ to: "/product/$slug", params: { slug: p.slug } });
-                          }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent/60 transition text-left"
-                        >
-                          <img
-                            src={p.image}
-                            alt=""
-                            className="w-10 h-10 rounded-lg object-cover shrink-0"
-                          />
-                          <span className="min-w-0">
-                            <span className="block text-sm text-foreground truncate">{p.name}</span>
-                            <span className="block text-xs text-muted-foreground">{p.category}</span>
-                          </span>
-                        </button>
-                      ))
-                    )}
-                  </div>
-                )}
               </div>
             )}
           </div>
