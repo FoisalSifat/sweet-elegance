@@ -1,7 +1,8 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cartStore, useCart } from "@/lib/cart-store";
+import { useCms } from "@/lib/cms-store";
 import { AnnouncementBar } from "@/components/announcement-bar";
 import izLogo from "@/assets/iz-logo.webp";
 
@@ -15,8 +16,43 @@ const links = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const cart = useCart();
+  const { products } = useCms();
   const totalQty = cart.items.reduce((a, b) => a + b.qty, 0);
+
+  const results = query.trim()
+    ? products
+        .filter((p) =>
+          `${p.name} ${p.category}`.toLowerCase().includes(query.trim().toLowerCase())
+        )
+        .slice(0, 6)
+    : [];
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+        setQuery("");
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setQuery("");
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [searchOpen]);
 
   useEffect(() => {
     let ticking = false;
@@ -83,9 +119,61 @@ export function Navbar() {
         </nav>
 
         <div className="flex items-center gap-0.5 xs:gap-1 sm:gap-2 shrink-0">
-          <button className="p-1.5 xs:p-2 hover:text-cocoa transition" aria-label="Search">
-            <Search className="w-4 h-4 xs:w-5 xs:h-5" />
-          </button>
+          <div className="relative" ref={searchRef}>
+            <button
+              className="p-1.5 xs:p-2 hover:text-cocoa transition"
+              aria-label="Search"
+              aria-expanded={searchOpen}
+              onClick={() => setSearchOpen((v) => !v)}
+            >
+              <Search className="w-4 h-4 xs:w-5 xs:h-5" />
+            </button>
+            {searchOpen && (
+              <div className="absolute right-0 top-full mt-2 w-72 xs:w-80 rounded-xl border border-border bg-card shadow-elegant overflow-hidden animate-fade-up">
+                <div className="flex items-center gap-2 px-3 py-2.5 border-b border-border">
+                  <Search className="w-4 h-4 text-muted-foreground shrink-0" />
+                  <input
+                    autoFocus
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search coffee, cakes, desserts..."
+                    className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+                  />
+                </div>
+                {query.trim() && (
+                  <div className="max-h-72 overflow-y-auto">
+                    {results.length === 0 ? (
+                      <p className="px-4 py-6 text-sm text-muted-foreground text-center">
+                        No items found for “{query.trim()}”
+                      </p>
+                    ) : (
+                      results.map((p) => (
+                        <button
+                          key={p.slug}
+                          onClick={() => {
+                            setSearchOpen(false);
+                            setQuery("");
+                            navigate({ to: "/product/$slug", params: { slug: p.slug } });
+                          }}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 hover:bg-accent/60 transition text-left"
+                        >
+                          <img
+                            src={p.image}
+                            alt=""
+                            className="w-10 h-10 rounded-lg object-cover shrink-0"
+                          />
+                          <span className="min-w-0">
+                            <span className="block text-sm text-foreground truncate">{p.name}</span>
+                            <span className="block text-xs text-muted-foreground">{p.category}</span>
+                          </span>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
           <button className="p-2 hover:text-cocoa transition hidden sm:inline-flex" aria-label="Account">
             <User className="w-5 h-5" />
           </button>
