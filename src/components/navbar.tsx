@@ -1,7 +1,8 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cartStore, useCart } from "@/lib/cart-store";
+import { useCms } from "@/lib/cms-store";
 import { AnnouncementBar } from "@/components/announcement-bar";
 import izLogo from "@/assets/iz-logo.webp";
 
