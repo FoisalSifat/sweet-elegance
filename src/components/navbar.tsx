@@ -16,8 +16,43 @@ const links = [
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
   const cart = useCart();
+  const { products } = useCms();
   const totalQty = cart.items.reduce((a, b) => a + b.qty, 0);
+
+  const results = query.trim()
+    ? products
+        .filter((p) =>
+          `${p.name} ${p.category}`.toLowerCase().includes(query.trim().toLowerCase())
+        )
+        .slice(0, 6)
+    : [];
+
+  useEffect(() => {
+    if (!searchOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setSearchOpen(false);
+        setQuery("");
+      }
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSearchOpen(false);
+        setQuery("");
+      }
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [searchOpen]);
 
   useEffect(() => {
     let ticking = false;
