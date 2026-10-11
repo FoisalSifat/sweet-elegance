@@ -95,7 +95,6 @@ export function Footer() {
             </Link>
           </p>
           <div className="flex gap-5 tracking-[0.2em] uppercase">
-            <a href="#" className="hover:text-cocoa">Twitter</a>
             <a href="#" className="hover:text-cocoa">Instagram</a>
             <a href="#" className="hover:text-cocoa">Pinterest</a>
           </div>
