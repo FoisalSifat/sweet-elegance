@@ -80,7 +80,7 @@ export function Navbar() {
       <AnnouncementBar />
       <div
         className={`container mx-auto px-3 xs:px-4 sm:px-6 flex items-center justify-between gap-2 transition-[height] duration-500 ease-out ${
-          scrolled ? "h-[3.25rem] xs:h-[3.75rem] sm:h-[5.25rem] lg:h-[6.25rem]" : "h-14 xs:h-18 sm:h-22 lg:h-26"
+          scrolled ? "h-[3.25rem] xs:h-[3.75rem] sm:h-[5rem] lg:h-[5.75rem]" : "h-14 xs:h-18 sm:h-22 lg:h-26"
         }`}
       >
         <button
