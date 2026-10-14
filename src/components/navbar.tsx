@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Search, User, ShoppingBag, Menu, X } from "lucide-react";
+import { Search, ShoppingBag, Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { cartStore, useCart } from "@/lib/cart-store";
 import { useCms } from "@/lib/cms-store";
@@ -179,9 +179,6 @@ export function Navbar() {
               </div>
             )}
           </div>
-          <button className="p-2 hover:text-cocoa transition hidden sm:inline-flex" aria-label="Account">
-            <User className="w-5 h-5" />
-          </button>
           <button
             onClick={() => cartStore.setOpen(true)}
             className="p-1.5 xs:p-2 hover:text-cocoa transition relative"
