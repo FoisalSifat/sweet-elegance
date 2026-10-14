@@ -250,8 +250,8 @@ function Home() {
             },
             {
               name: "Nusrat Jahan",
-              role: "Macaron gift box",
-              text: "Such a pretty box to give as a gift. The macarons had a nice crisp shell and a soft centre. I'd pick these up again for a friend.",
+              role: "Coconut cold brew",
+              text: "The coconut cold brew was smooth and never bitter, and the ice hadn't watered it down by the end. Perfect with a croissant on a hot afternoon.",
             },
           ].map((t, i) => (
             <div
