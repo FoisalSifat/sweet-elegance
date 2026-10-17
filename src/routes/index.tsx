@@ -266,12 +266,7 @@ function Home() {
                 <div className="w-10 h-10 shrink-0 rounded-full bg-muted flex items-center justify-center text-cocoa text-xs font-medium">
                   {t.name.split(" ").map((part) => part[0]).join("")}
                 </div>
-                <div className="text-xs">
-                  <p className="font-medium text-cocoa text-sm">{t.name}</p>
-                  <p className="text-muted-foreground text-xs mt-0.5">
-                    Sample reviewer
-                  </p>
-                </div>
+                <p className="font-medium text-cocoa text-sm">{t.name}</p>
               </div>
             </div>
           ))}
