@@ -12,10 +12,9 @@ export function AnnouncementBar() {
           {loop.map((m, idx) => (
             <span
               key={idx}
-              className="px-4 xs:px-6 sm:px-10 md:px-14 lg:px-16 font-medium tracking-wide flex items-center gap-1.5 xs:gap-2 sm:gap-3"
+              className="px-4 xs:px-6 sm:px-10 md:px-14 lg:px-16 font-medium tracking-wide whitespace-nowrap"
             >
               {m}
-              <span className="opacity-40">•</span>
             </span>
           ))}
         </div>
