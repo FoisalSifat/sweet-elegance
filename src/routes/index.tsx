@@ -262,10 +262,7 @@ function Home() {
               <p className="text-sm text-foreground/80 leading-relaxed mb-7 flex-1">
                 “{t.text}”
               </p>
-              <div className="flex items-center gap-3 border-t border-border/60 pt-4">
-                <div className="w-10 h-10 shrink-0 rounded-full bg-muted flex items-center justify-center text-cocoa text-xs font-medium">
-                  {t.name.split(" ").map((part) => part[0]).join("")}
-                </div>
+              <div className="border-t border-border/60 pt-4">
                 <p className="font-medium text-cocoa text-sm">{t.name}</p>
               </div>
             </div>
