@@ -62,14 +62,14 @@ export function Footer() {
         </div>
 
         <div>
-          <h4 className="text-[11px] tracking-[0.22em] uppercase text-cocoa/60 mb-4">Stay Inspired</h4>
+          <h4 className="text-[11px] tracking-[0.22em] uppercase text-cocoa/60 mb-4">Fresh From The Oven</h4>
           <p className="text-sm text-foreground/70 mb-4 leading-relaxed">
-            Join our mailing list for secret drops and seasonal previews.
+            Be first to know about new cakes, seasonal flavours and weekend specials.
           </p>
           <form className="flex gap-2 min-w-0">
             <input
               type="email"
-              placeholder="Email Address"
+              placeholder="Your email"
               className="flex-1 min-w-0 bg-card border border-cocoa/15 rounded-full px-3 sm:px-4 py-2.5 text-sm placeholder:text-foreground/40 focus:outline-none focus:border-cocoa/50"
             />
             <button
