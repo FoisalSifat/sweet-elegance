@@ -54,7 +54,7 @@ export function Footer() {
         <div>
           <h4 className="text-[11px] tracking-[0.22em] uppercase text-cocoa/60 mb-4">Support</h4>
           <ul className="space-y-2.5 text-sm text-foreground/75">
-            <li><a href="#" className="hover:text-cocoa">Shipping & Returns</a></li>
+            <li><Link to="/shipping-returns" className="hover:text-cocoa">Shipping & Returns</Link></li>
             <li><a href="#" className="hover:text-cocoa">Wholesale</a></li>
             <li><Link to="/contact" className="hover:text-cocoa">Contact Us</Link></li>
             <li><a href="#" className="hover:text-cocoa">Privacy Policy</a></li>
