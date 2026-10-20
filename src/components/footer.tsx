@@ -82,7 +82,7 @@ export function Footer() {
         </div>
       </div>
       <div className="border-t border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-5 flex items-center justify-center gap-1.5 text-[11px] text-muted-foreground">
+        <div className="container mx-auto px-4 sm:px-6 py-5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
           <span>© {new Date().getFullYear()} IZ Patisserie & Cafe</span>
           <Link
             to="/admin"
