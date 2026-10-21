@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Facebook, Mail, ArrowRight, Sparkle } from "lucide-react";
+import { Instagram, Facebook, ArrowRight, Sparkle } from "lucide-react";
 import izLogo from "@/assets/iz-logo.webp";
 import { useCms } from "@/lib/cms-store";
 
@@ -25,7 +25,6 @@ export function Footer() {
             {[
               { Icon: Instagram, href: settings.socials.instagram, label: "Instagram" },
               { Icon: Facebook, href: settings.socials.facebook, label: "Facebook" },
-              { Icon: Mail, href: settings.socials.email, label: "Email" },
             ].map(({ Icon, href, label }, i) => (
               <a
                 key={i}
