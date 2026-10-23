@@ -52,7 +52,7 @@ function Shop() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4 sm:px-6 py-8 xs:py-12 sm:py-16">
+      <section className="container mx-auto px-4 sm:px-6 pt-5 xs:pt-8 sm:pt-10 pb-10 sm:pb-16">
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 xs:gap-5 sm:gap-8">
           {filtered.map((p) => (
             <ProductCard key={p.slug} product={p} />
