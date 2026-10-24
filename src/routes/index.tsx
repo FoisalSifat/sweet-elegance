@@ -229,7 +229,6 @@ function Home() {
       <section className="container mx-auto px-4 sm:px-6 pt-12 sm:pt-16 pb-16 sm:pb-24">
         <div className="text-center mb-10">
           <h2 className="font-serif text-3xl sm:text-4xl text-cocoa">A Sweet Impression</h2>
-          <p className="mt-3 text-xs text-muted-foreground">Sample reviews · Not verified customer feedback</p>
         </div>
         <div className="grid md:grid-cols-3 gap-5">
           {[
