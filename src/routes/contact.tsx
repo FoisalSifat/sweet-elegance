@@ -62,7 +62,7 @@ const faqs = [
 
 function Contact() {
   const { settings } = useCms();
-  const [form, setForm] = useState({ name: "", email: "", subject: subjectOptions[0], message: "" });
+  const [form, setForm] = useState({ name: "", email: "", subject: subjectOptions[0] as string, message: "" });
   const [sent, setSent] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
