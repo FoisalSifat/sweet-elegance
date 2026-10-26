@@ -110,26 +110,27 @@ function Contact() {
         </div>
       </section>
 
-      {/* Info cards */}
+      {/* Contact panel */}
       <section className="container mx-auto px-4 sm:px-6 -mt-8 sm:-mt-10 relative z-10">
-        <div className="grid sm:grid-cols-3 gap-4 max-w-5xl mx-auto">
+        <div className="bg-card rounded-3xl border border-border shadow-soft max-w-4xl mx-auto divide-y divide-border overflow-hidden">
           {info.map(({ icon: Icon, t, d, action }, i) => (
-            <div
-              key={i}
-              className="bg-card rounded-3xl border border-border shadow-soft p-6 flex flex-col"
-            >
-              <div className="w-11 h-11 rounded-full bg-cocoa text-cocoa-foreground flex items-center justify-center mb-4">
-                <Icon className="w-5 h-5" />
+            <div key={i} className="flex flex-col gap-3 px-5 xs:px-6 py-5 sm:flex-row sm:items-center sm:gap-6">
+              <div className="flex items-start gap-4 flex-1 min-w-0">
+                <div className="w-11 h-11 rounded-full bg-cocoa text-cocoa-foreground flex items-center justify-center shrink-0">
+                  <Icon className="w-5 h-5" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-serif text-lg text-cocoa mb-0.5">{t}</h3>
+                  <p className="text-sm text-foreground/70 whitespace-pre-line leading-relaxed">
+                    {d}
+                  </p>
+                </div>
               </div>
-              <h3 className="font-serif text-lg text-cocoa mb-1.5">{t}</h3>
-              <p className="text-sm text-foreground/70 whitespace-pre-line leading-relaxed flex-1">
-                {d}
-              </p>
               <a
                 href={action.href}
                 target={action.href.startsWith("http") ? "_blank" : undefined}
                 rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="mt-4 text-sm text-cocoa font-medium hover:text-rose-gold transition inline-flex items-center gap-1.5"
+                className="shrink-0 self-start sm:self-center inline-flex items-center gap-1.5 rounded-full border border-cocoa/20 px-4 py-2 text-sm text-cocoa font-medium hover:bg-cocoa hover:text-cocoa-foreground transition"
               >
                 {action.label}
                 <span aria-hidden>→</span>
