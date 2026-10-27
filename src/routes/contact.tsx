@@ -110,11 +110,11 @@ function Contact() {
         </div>
       </section>
 
-      {/* Contact panel */}
-      <section className="container mx-auto px-4 sm:px-6 -mt-8 sm:-mt-10 relative z-10">
-        <div className="bg-card rounded-3xl border border-border shadow-soft max-w-4xl mx-auto grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border overflow-hidden">
+      {/* Contact info — open, no card */}
+      <section className="container mx-auto px-4 sm:px-6 py-12 sm:py-16">
+        <div className="max-w-4xl mx-auto grid sm:grid-cols-3 gap-10 sm:gap-12">
           {info.map(({ icon: Icon, t, d, action }, i) => (
-            <div key={i} className="flex flex-col px-5 xs:px-6 py-6">
+            <div key={i} className="flex flex-col">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-9 h-9 rounded-full bg-cream text-cocoa flex items-center justify-center shrink-0">
                   <Icon className="w-4 h-4" />
