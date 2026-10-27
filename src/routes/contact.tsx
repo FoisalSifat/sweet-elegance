@@ -112,25 +112,23 @@ function Contact() {
 
       {/* Contact panel */}
       <section className="container mx-auto px-4 sm:px-6 -mt-8 sm:-mt-10 relative z-10">
-        <div className="bg-card rounded-3xl border border-border shadow-soft max-w-4xl mx-auto divide-y divide-border overflow-hidden">
+        <div className="bg-card rounded-3xl border border-border shadow-soft max-w-4xl mx-auto grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-border overflow-hidden">
           {info.map(({ icon: Icon, t, d, action }, i) => (
-            <div key={i} className="flex flex-col gap-3 px-5 xs:px-6 py-5 sm:flex-row sm:items-center sm:gap-6">
-              <div className="flex items-start gap-4 flex-1 min-w-0">
-                <div className="w-11 h-11 rounded-full bg-cocoa text-cocoa-foreground flex items-center justify-center shrink-0">
-                  <Icon className="w-5 h-5" />
+            <div key={i} className="flex flex-col px-5 xs:px-6 py-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-full bg-cream text-cocoa flex items-center justify-center shrink-0">
+                  <Icon className="w-4 h-4" />
                 </div>
-                <div className="min-w-0">
-                  <h3 className="font-serif text-lg text-cocoa mb-0.5">{t}</h3>
-                  <p className="text-sm text-foreground/70 whitespace-pre-line leading-relaxed">
-                    {d}
-                  </p>
-                </div>
+                <h3 className="font-serif text-base text-cocoa">{t}</h3>
               </div>
+              <p className="text-sm text-foreground/70 whitespace-pre-line leading-relaxed flex-1">
+                {d}
+              </p>
               <a
                 href={action.href}
                 target={action.href.startsWith("http") ? "_blank" : undefined}
                 rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="shrink-0 self-start sm:self-center inline-flex items-center gap-1.5 rounded-full border border-cocoa/20 px-4 py-2 text-sm text-cocoa font-medium hover:bg-cocoa hover:text-cocoa-foreground transition"
+                className="mt-4 self-start inline-flex items-center gap-1 text-sm font-medium text-cocoa hover:text-rose-gold transition"
               >
                 {action.label}
                 <span aria-hidden>→</span>
