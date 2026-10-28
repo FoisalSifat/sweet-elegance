@@ -128,22 +128,20 @@ function About() {
       {/* VALUES */}
       <section className="bg-cream/40 border-y border-border/60 py-14 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10 sm:mb-14">
+          <div className="text-center mb-12 sm:mb-16">
+            <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-3">Our Promise</p>
             <h2 className="font-serif text-3xl sm:text-4xl text-cocoa">What we stand for</h2>
             <p className="mt-3 text-sm text-foreground/65">
               Four simple promises we don't compromise on.
             </p>
           </div>
-          <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-x-8 sm:gap-x-10 gap-y-10">
             {values.map((v) => (
-              <div
-                key={v.title}
-                className="bg-card rounded-lg p-6 sm:p-8 border border-border/60 shadow-soft"
-              >
-                <div className="w-11 h-11 rounded-full bg-blush/60 flex items-center justify-center mb-5">
-                  <v.icon className="w-5 h-5 text-cocoa" />
+              <div key={v.title} className="border-t border-border/70 pt-6 sm:pt-7">
+                <div className="w-10 h-10 rounded-full bg-blush/50 flex items-center justify-center mb-4">
+                  <v.icon className="w-[18px] h-[18px] text-rose-gold" />
                 </div>
-                <h3 className="font-serif text-xl text-cocoa mb-3">{v.title}</h3>
+                <h3 className="font-serif text-lg text-cocoa mb-2">{v.title}</h3>
                 <p className="text-sm text-foreground/70 leading-relaxed">{v.text}</p>
               </div>
             ))}
