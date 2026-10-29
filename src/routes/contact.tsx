@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
+import izInterior from "@/assets/iz-interior.jpg";
 import { useCms } from "@/lib/cms-store";
 
 export const Route = createFileRoute("/contact")({
@@ -97,13 +98,23 @@ function Contact() {
       <Navbar />
 
       {/* Hero header */}
-      <section className="bg-gradient-cream border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-14 xs:py-16 sm:py-20 text-center max-w-2xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4">Say hello</p>
-          <h1 className="font-serif text-4xl xs:text-5xl sm:text-6xl text-cocoa leading-[1.05]">
+      <section className="relative border-b border-border overflow-hidden">
+        <img
+          src={izInterior}
+          alt=""
+          aria-hidden
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-background/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/60" />
+        <div className="relative container mx-auto px-4 sm:px-6 py-14 xs:py-16 sm:py-20 text-center max-w-2xl mx-auto">
+          <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4 drop-shadow-sm">
+            Say hello
+          </p>
+          <h1 className="font-serif text-4xl xs:text-5xl sm:text-6xl text-cocoa leading-[1.05] drop-shadow-sm">
             We'd love to hear from you
           </h1>
-          <p className="mt-5 text-foreground/70 leading-relaxed">
+          <p className="mt-5 text-foreground/80 leading-relaxed drop-shadow-sm">
             Custom cakes, bulk orders, press, or just to say hi — we read every message and reply
             within one working day.
           </p>
