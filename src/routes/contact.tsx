@@ -126,7 +126,7 @@ function Contact() {
         <div className="max-w-4xl mx-auto grid sm:grid-cols-3 gap-10 sm:gap-12">
           {info.map(({ icon: Icon, t, d, action }, i) => (
             <div key={i} className="flex flex-col">
-              <div className="flex items-center gap-3 mb-3">
+              <div className="flex items-center gap-2 mb-3">
                 <div className="w-9 h-9 rounded-full bg-cream text-cocoa flex items-center justify-center shrink-0">
                   <Icon className="w-4 h-4" />
                 </div>
