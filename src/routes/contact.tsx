@@ -105,8 +105,8 @@ function Contact() {
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-background/80" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background/60" />
+        <div className="absolute inset-0 bg-background/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/25 via-transparent to-background/35" />
         <div className="relative container mx-auto px-4 sm:px-6 py-14 xs:py-16 sm:py-20 text-center max-w-2xl mx-auto">
           <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4 drop-shadow-sm">
             Say hello
