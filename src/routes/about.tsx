@@ -101,11 +101,10 @@ function About() {
           <h2 className="font-serif text-3xl sm:text-4xl text-cocoa mb-6">Where it began</h2>
           <div className="space-y-5 text-sm sm:text-base text-foreground/75 leading-relaxed">
             <p>
-              It started the way most good things do — with one oven, one very stubborn dream and
-              a home kitchen that was far too small. We wanted to bring the soft, romantic
-              patisserie experience of Paris and Tokyo to Dhaka: the kind of place where a
-              croissant is still laminated by hand and a birthday cake is treated like a gift,
-              not an order number.
+              IZ Patisserie began with a simple idea: bring a little of Paris and Tokyo’s
+              patisserie charm to Dhaka. From our home kitchen, we set out to make pastries with
+              care and celebration cakes that feel personal — thoughtful creations made for
+              sharing, gifting and making everyday moments special.
             </p>
             <p>
               The first months were mostly trial and error — recipes rewritten late at night,
