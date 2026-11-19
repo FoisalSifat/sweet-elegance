@@ -1,6 +1,7 @@
 # Roadmap
 
 - [x] Landing page: optimize hero, category tiles, hot picks, reviews, and Instagram section for tablet and mobile
+- [x] Footer: replace the old tagline with a warmer bakery-focused line
 - [x] Navbar search: keep navbar height unchanged, morph search icon into search bar with smooth animation
 - [x] Footer: remove Twitter button
 - [x] Footer: remove Pinterest text

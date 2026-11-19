@@ -67,6 +67,10 @@ type State = {
 
 const STORAGE_KEY = "iz-cms-v1";
 const ADMIN_TOKEN_KEY = "iz-admin-token-v1";
+const previousFooterTagline =
+  "Crafting moments of pure indulgence through artisanal baking and high-end culinary artistry.";
+const defaultFooterTagline =
+  "Freshly baked with care, served with warmth, and made to make every moment a little sweeter.";
 
 const defaultSlides: HeroSlide[] = [
   {
@@ -106,8 +110,7 @@ const defaultSettings: SiteSettings = {
     email: "hello@izpatisserie.com",
     secondaryEmail: "orders@izpatisserie.com",
   },
-  footerTagline:
-    "Crafting moments of pure indulgence through artisanal baking and high-end culinary artistry.",
+  footerTagline: defaultFooterTagline,
   socials: {
     instagram: "https://www.instagram.com/izpatisserieandcafe/",
     facebook: "https://www.facebook.com/IZPatisserieandCafe/",
@@ -124,7 +127,10 @@ const defaultState: State = {
 
 
 function mergeSettings(parsed: Partial<SiteSettings> | null | undefined): SiteSettings {
-  return { ...defaultSettings, ...(parsed || {}) };
+  const merged = { ...defaultSettings, ...(parsed || {}) };
+  return merged.footerTagline === previousFooterTagline
+    ? { ...merged, footerTagline: defaultFooterTagline }
+    : merged;
 }
 
 /** Build a full state object. Empty arrays are KEPT empty when `useDefaultsForEmpty` is false. */
