@@ -105,16 +105,16 @@ function Contact() {
           aria-hidden
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-background/20" />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/20" />
+        <div className="absolute inset-0 bg-cocoa/65" />
+        <div className="absolute inset-0 bg-gradient-to-b from-cocoa/35 via-cocoa/55 to-cocoa/75" />
         <div className="relative container mx-auto px-4 sm:px-6 py-14 xs:py-16 sm:py-20 text-center max-w-2xl mx-auto">
-          <p className="text-xs tracking-[0.3em] uppercase text-rose-gold mb-4 drop-shadow-sm">
+          <p className="text-xs tracking-[0.3em] uppercase text-cream mb-4 drop-shadow-md">
             Say hello
           </p>
-          <h1 className="font-serif text-4xl xs:text-5xl sm:text-6xl text-cocoa leading-[1.05] drop-shadow-sm">
+          <h1 className="font-serif text-4xl xs:text-5xl sm:text-6xl text-cocoa-foreground leading-[1.05] drop-shadow-lg">
             We'd love to hear from you
           </h1>
-          <p className="mt-5 text-foreground/80 leading-relaxed drop-shadow-sm">
+          <p className="mt-5 text-cocoa-foreground/90 leading-relaxed drop-shadow-md">
             Custom cakes, bulk orders, press, or just to say hi — we read every message and reply
             within one working day.
           </p>
