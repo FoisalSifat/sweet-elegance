@@ -5,7 +5,8 @@ import {
   Phone,
   MapPin,
   Clock,
-  ChevronDown,
+  Minus,
+  Plus,
   Send,
   Instagram,
   Facebook,
@@ -292,43 +293,52 @@ function Contact() {
         </div>
       </section>
 
-      {/* FAQ */}
-      <section className="bg-cream border-t border-border">
-        <div className="container mx-auto px-4 sm:px-6 py-14 sm:py-20">
-          <div className="text-center max-w-xl mx-auto mb-10">
-            <h2 className="font-serif text-3xl xs:text-4xl text-cocoa">Quick answers</h2>
-            <p className="mt-3 text-sm text-foreground/60">
-              The questions we hear most often — before you pick up the phone.
-            </p>
-          </div>
-          <div className="max-w-3xl mx-auto space-y-3">
+      {/* Visit and order information */}
+      <section className="bg-cream border-y border-border">
+        <div className="container mx-auto px-4 sm:px-6 py-12 xs:py-14 sm:py-20">
+          <div className="max-w-6xl mx-auto grid gap-8 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-16">
+            <div className="max-w-md">
+              <p className="text-xs tracking-[0.2em] uppercase text-rose-gold mb-3">
+                A little guidance
+              </p>
+              <h2 className="font-serif text-3xl xs:text-4xl text-cocoa leading-tight">
+                Before You Visit or Order
+              </h2>
+              <p className="mt-3 text-sm text-foreground/65 leading-relaxed">
+                A few useful details about custom cakes, delivery, bulk orders and ingredients.
+              </p>
+            </div>
+            <div className="max-w-3xl">
             {faqs.map((f, i) => (
-              <div key={i} className="bg-card rounded-2xl border border-border overflow-hidden">
+              <div key={i} className="border-t border-border last:border-b overflow-hidden">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between gap-4 px-5 sm:px-6 py-4 text-left"
+                  className="w-full min-h-14 flex items-center justify-between gap-4 py-4 text-left"
                   aria-expanded={openFaq === i}
+                  aria-controls={`contact-faq-answer-${i}`}
                 >
                   <span className="text-sm sm:text-base font-medium text-cocoa">{f.q}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 text-cocoa/60 shrink-0 transition-transform duration-300 ${
-                      openFaq === i ? "rotate-180" : ""
-                    }`}
-                  />
+                  {openFaq === i ? (
+                    <Minus className="w-4 h-4 text-cocoa/60 shrink-0" aria-hidden="true" />
+                  ) : (
+                    <Plus className="w-4 h-4 text-cocoa/60 shrink-0" aria-hidden="true" />
+                  )}
                 </button>
                 <div
+                  id={`contact-faq-answer-${i}`}
                   className={`grid transition-all duration-300 ease-out ${
                     openFaq === i ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
                   }`}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-5 sm:px-6 pb-5 text-sm text-foreground/70 leading-relaxed">
+                    <p className="max-w-2xl pb-5 pr-8 text-sm text-foreground/70 leading-relaxed">
                       {f.a}
                     </p>
                   </div>
                 </div>
               </div>
             ))}
+            </div>
           </div>
 
           {/* Follow */}

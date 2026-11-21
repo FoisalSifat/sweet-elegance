@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Contact page: rename and restyle the FAQ section as an open visit/order guide
 - [x] Landing page: optimize hero, category tiles, hot picks, reviews, and Instagram section for tablet and mobile
 - [x] Footer: replace the old tagline with a warmer bakery-focused line
 - [x] Navbar search: keep navbar height unchanged, morph search icon into search bar with smooth animation
